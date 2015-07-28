@@ -13,12 +13,6 @@ module.exports = {
     port: 6379,
     options: {}
   },
-  oss: {
-    'accessKeyId': 'WbM4b44SR3takIzN',
-    'secretAccessKey': 'KBdjjnHQ0Q6IddBTvZS7MLqm1DScBv',
-    'endpoint': 'http://oss-cn-beijing.aliyuncs.com',
-    'apiVersion': '2013-10-15'
-  },
   log: {
     format: 'dev',
     options: {}

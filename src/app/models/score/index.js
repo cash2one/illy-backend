@@ -6,9 +6,9 @@
 var _ = require('lodash');
 
 module.exports = _.assign(
-  require('./schoolScoreRule.model'),
-  require('./scoreExchange.model.model'),
-  require('./scoreExchangeInstruction.model'),
-  require('./scoreTrace.model')
+    require('./schoolScoreRule.model'),
+    require('./scoreExchange.model'),
+    require('./scoreExchangeInstruction.model'),
+    require('./scoreTrace.model')
 );
 

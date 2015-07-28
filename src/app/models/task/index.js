@@ -8,5 +8,5 @@ module.exports = _.extend(
     require('./activity.model'),
     require('./activityCollect.model'),
     require('./task.model'),
-    require('./taskCollect.model')
+    require('./taskRecord.model')
 );

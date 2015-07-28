@@ -1,5 +1,5 @@
-var jsSHA = require('jssha'),
-    config = require('../../../config/config');
+var jsSHA = require('jssha');
+var config = require('../../../config/config');
 
 
 var createNonceStr = function () {

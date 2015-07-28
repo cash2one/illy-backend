@@ -8,10 +8,10 @@
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 var config = require('./config/config'),
-  chalk = require('chalk');
+    chalk = require('chalk');
 
 // connect to mongodb
-require('./db/mongo')();
+require('./db/mongo');
 
 // Bootstrap server
 var app = require('koa')();
@@ -19,7 +19,7 @@ require('./config/koa')(app);
 
 // Start server
 app.listen(config.port, config.ip, function () {
-  console.log('Koa server listening on %d, in %s mode', config.port, config.env);
+    console.log('Koa server listening on %d, in %s mode', config.port, config.env);
 });
 
 // Expose app

@@ -12,14 +12,14 @@ var Schema = mongoose.Schema;
  */
 
 var garbageSchema = new Schema({
-  key: String,
-  created: {
-    type: Date,
-    default: Date.now
-  }
+    key: String,
+    created: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 
 module.exports = {
-  QnGarbage: mongoose.model('QnGarbage', garbageSchema)
+    QnGarbage: mongoose.model('QnGarbage', garbageSchema)
 };

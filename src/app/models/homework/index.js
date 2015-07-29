@@ -7,6 +7,6 @@
 var _ = require('lodash');
 
 module.exports = _.assign(
-  require('./homework.model'),
-  require('./quizBase.model')
+    require('./homework.model'),
+    require('./quizBase.model')
 );

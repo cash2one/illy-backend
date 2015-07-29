@@ -5,7 +5,7 @@
 
 module.exports = function (queue) {
 
-  require('./qn')(queue);
-  require('./weixinEvent')(queue);
+    require('./qn')(queue);
+    require('./weixinEvent')(queue);
 
 };

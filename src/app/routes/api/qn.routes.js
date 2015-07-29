@@ -6,5 +6,5 @@
 'use strict';
 var qn = require('../../api/v1/qn.api');
 module.exports = function (api) {
-  api.post('/public/qn/persistentNotify', qn.persistentNotify);
+    api.post('/public/qn/persistentNotify', qn.persistentNotify);
 };

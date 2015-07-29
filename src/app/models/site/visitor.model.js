@@ -8,21 +8,21 @@ var ObjectId = Schema.Types.ObjectId;
 
 
 var visitorSchema = new Schema({
-  openid: {
-    type: String,
-    index: true,
-    required: true
-  },
-  schoolId: {
-    type: ObjectId,
-    required: true
-  },
-  created: {
-    type: Date,
-    default: Date.now
-  }
+    openid: {
+        type: String,
+        index: true,
+        required: true
+    },
+    schoolId: {
+        type: ObjectId,
+        required: true
+    },
+    created: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 module.exports = {
-  Visitor: mongoose.model('Visitor', visitorSchema)
+    Visitor: mongoose.model('Visitor', visitorSchema)
 };

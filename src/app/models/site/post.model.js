@@ -10,69 +10,69 @@ var ObjectId = Schema.Types.ObjectId;
 
 var postSchema = new Schema({
 
-  // 标题
-  title: {
-    type: String
-  },
-  image: {
-    type: String
-  },
-  // 内容
-  content: {
-    type: String
-  },
+    // 标题
+    title: {
+        type: String
+    },
+    image: {
+        type: String
+    },
+    // 内容
+    content: {
+        type: String
+    },
 
-  // 对应分类
-  category: {
-    type: ObjectId,
-    ref: 'Category'
-  },
+    // 对应分类
+    category: {
+        type: ObjectId,
+        ref: 'Category'
+    },
 
-  // 访问量
-  visitCount: {
-    type: Number,
-    default: 0
-  },
+    // 访问量
+    visitCount: {
+        type: Number,
+        default: 0
+    },
 
-  // 分享数量
-  shareCount: {
-    type: Number,
-    default: 0
-  },
+    // 分享数量
+    shareCount: {
+        type: Number,
+        default: 0
+    },
 
-  //是否轮播
-  isSlide: {
-    type: Number,
-    enums: [0, 1], //0 否  1 是
-    default: 0
-  },
-  // 标签
-  tags: {
-    type: [String]
-  },
+    //是否轮播
+    isSlide: {
+        type: Number,
+        enums: [0, 1], //0 否  1 是
+        default: 0
+    },
+    // 标签
+    tags: {
+        type: [String]
+    },
 
-  created: {
-    type: Date,
-    default: Date.now
-  },
+    created: {
+        type: Date,
+        default: Date.now
+    },
 
-  updated: {
-    type: Date,
-    default: Date.now
-  },
+    updated: {
+        type: Date,
+        default: Date.now
+    },
 
-  schoolId: {
-    type: ObjectId,
-    index: true
-  }
+    schoolId: {
+        type: ObjectId,
+        index: true
+    }
 
 });
 
 postSchema.pre('update', function (next) {
-  this.update({updated: Date.now()});
-  next();
+    this.update({updated: Date.now()});
+    next();
 });
 
 module.exports = {
-  Post: mongoose.model('Post', postSchema)
+    Post: mongoose.model('Post', postSchema)
 };

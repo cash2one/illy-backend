@@ -6,21 +6,21 @@ var Schema = mongoose.Schema;
  * @type {*|Schema}
  */
 var scoreExchangeInstructionSchema = new Schema({
-  title: {
-    type: String,
-    trim: true
-  },
-  content: {
-    type: String,
-    trim: true
-  },
-  createdTime: {
-    type: Date,
-    default: Date.now
-  }
+    title: {
+        type: String,
+        trim: true
+    },
+    content: {
+        type: String,
+        trim: true
+    },
+    createdTime: {
+        type: Date,
+        default: Date.now
+    }
 
 });
 
 module.exports = {
-  ScoreExchangeInstruction: mongoose.model('ScoreExchangeInstruction', scoreExchangeInstructionSchema)
+    ScoreExchangeInstruction: mongoose.model('ScoreExchangeInstruction', scoreExchangeInstructionSchema)
 };

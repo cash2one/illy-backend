@@ -6,5 +6,5 @@
 
 var co = require('co');
 module.exports = co.wrap(function* (msg) {
-  return "";
+    return "";
 });

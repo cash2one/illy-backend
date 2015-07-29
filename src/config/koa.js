@@ -33,8 +33,6 @@ module.exports = function (app) {
         'Access-Control-Max-Age': 1728000
     }));
 
-    // mogan settings
-    app.use(morgan.middleware(logger.getLogOptions(), logger.getLogFormat()));
 
     // error handler
     app.use(function *(next) {
@@ -65,6 +63,16 @@ module.exports = function (app) {
 
     // jwt token
     app.use(jwt(config.jwt).unless({path: [/^\/api\/v1\/public/]}));
+
+    //log  request detail in debug mode
+    if (config.debug) {
+        app.use(function*(next) {
+            console.log('request url : ', this.request.url);
+            console.log('request body: ', this.request.body);
+            yield next;
+            console.log('response :', this.body);
+        });
+    }
 
     //loading routes
     require('../app/routes')(app);

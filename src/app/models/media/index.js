@@ -8,6 +8,6 @@
 var _ = require('lodash');
 
 module.exports = _.assign(
-  require('./media.model'),
-  require('./mediaGroup.model')
+    require('./media.model'),
+    require('./mediaGroup.model')
 );

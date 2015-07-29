@@ -6,14 +6,14 @@
 var _ = require('lodash');
 
 module.exports = _.assign(
-  require('./homework'),
-  require('./media'),
-  require('./preview'),
-  require('./score'),
-  require('./site'),
-  require('./task'),
-  require('./user'),
-  require('./system'),
-  require('./class.model'),
-  require('./loginLog.model')
+    require('./homework'),
+    require('./media'),
+    require('./preview'),
+    require('./score'),
+    require('./site'),
+    require('./task'),
+    require('./user'),
+    require('./system'),
+    require('./class.model'),
+    require('./loginLog.model')
 );

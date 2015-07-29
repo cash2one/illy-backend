@@ -35,12 +35,9 @@ var previewApi = {
     },
 
     /**
-     *
      * 获取指定预习
-     *
      */
     read: function*() {
-
         var preview = yield Preview.findById(this.params.id)
             .select('title exercises keyPoint keyPointRecord').lean().exec();
         if (!preview || preview.state === 1) {
@@ -49,10 +46,8 @@ var previewApi = {
         this.body = preview;
     },
 
-
     /**
      * 提交预习
-     *
      */
     addPerformance: function*() {
 

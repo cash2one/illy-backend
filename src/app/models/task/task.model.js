@@ -27,7 +27,7 @@ var taskSchema = new Schema({
 
     state: {             // 任务状态 0: 进行中 1: 结束
         type: Number,
-        enum: [0, 1, 2],
+        enum: [0, 1],
         default: 0
     },
 

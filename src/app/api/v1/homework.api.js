@@ -119,7 +119,7 @@ var homeworkApi = {
             queue.create('qnUpload', {
                 key: key,
                 mediaId: audioAnswer.answer
-            }).save();
+            }).attempts(2).save();
             audioAnswer.answer = key + '.mp3';
         });
         // 提交成绩

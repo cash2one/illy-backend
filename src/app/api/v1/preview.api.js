@@ -3,6 +3,7 @@
  */
 
 'use strict';
+var _ = require('lodash');
 var models = require('../../models');
 var systemScoreRules = require('../../common/systemScoreRules');
 var ruleKeys = require('../../common/constants').scoreRules;
@@ -66,7 +67,7 @@ var previewApi = {
             queue.create('qnUpload', {
                 key: key,
                 mediaId: audioAnswer.answer
-            }).save();
+            }).attempts(2).save();
             audioAnswer.answer = key + '.mp3';
         });
         // 提交成绩

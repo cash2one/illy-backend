@@ -22,7 +22,10 @@ var siteApi = {
         for (var i = 0; i < categories.length; i++) {
             var category = categories[i];
             ret[i] = category;
-            var promise = Post.find({category: category._id}, 'title image').lean().limit(4).exec();
+            var promise = Post.find({category: category._id}, 'title image shareCount visitCount')
+                .lean()
+                .limit(4)
+                .exec();
             postsList.push(promise);
         }
         postsList = yield postsList;
@@ -39,7 +42,7 @@ var siteApi = {
         var offset = this.request.query.offset || 0;
         var limit = this.request.query.limit || 6;
         var posts = yield Post.find({category: this.params.categoryId})
-            .select('title image')
+            .select('title image shareCount visitCount')
             .lean()
             .skip(offset)
             .limit(limit)
@@ -55,7 +58,7 @@ var siteApi = {
         var schoolId = jwtUser.schoolId;
         var limit = this.request.query.limit || 5;
         var posts = yield Post.find({isSlide: 1, schoolId: schoolId})
-            .select('image title')
+            .select('image title shareCount visitCount')
             .limit(limit)
             .lean()
             .exec();
@@ -72,7 +75,7 @@ var siteApi = {
         var limit = this.request.query.limit || 5;
         var posts = yield Post.find({schoolId: schoolId})
             .sort('-visitCount')
-            .select('image title')
+            .select('image title shareCount visitCount')
             .limit(limit)
             .lean()
             .exec();

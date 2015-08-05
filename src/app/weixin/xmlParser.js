@@ -2,6 +2,7 @@
  *
  * Created by Frank on 15/7/5.
  */
+'use strict';
 
 //用于解析微信xml格式信息
 var bodyParser = require('co-body');

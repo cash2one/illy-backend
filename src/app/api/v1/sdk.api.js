@@ -1,6 +1,7 @@
 /**
  * Created by Frank on 15/7/6.
  */
+'use strict';
 var _ = require('lodash');
 var sign = require('../../weixin/sdk/sign');
 var weixin = require('../../weixin/api');

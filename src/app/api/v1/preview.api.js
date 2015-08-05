@@ -7,6 +7,7 @@ var _ = require('lodash');
 var models = require('../../models');
 var systemScoreRules = require('../../common/systemScoreRules');
 var ruleKeys = require('../../common/constants').scoreRules;
+var queue = require('../../tasks');
 var SchoolScoreRule = models.SchoolScoreRule;
 var Preview = models.Preview;
 var Student = models.Student;

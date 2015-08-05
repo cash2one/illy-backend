@@ -47,10 +47,6 @@ var categorySchema = new Schema({
     }
 });
 
-categorySchema.pre('update', function (next) {
-    this.update({updated: Date.now()});
-    next();
-});
 
 module.exports = {
     Category: mongoose.model('Category', categorySchema)

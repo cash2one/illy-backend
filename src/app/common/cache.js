@@ -1,6 +1,7 @@
 /**
  * Created by Frank on 15/6/29.
  */
+'use strict';
 
 var redis = require('../../db/redis');
 

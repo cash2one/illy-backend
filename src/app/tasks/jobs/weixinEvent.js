@@ -1,7 +1,7 @@
 /**
  * Created by Frank on 15/7/18.
  */
-
+'use strict';
 
 var cache = require('../../common/cache'),
     co = require('co'),

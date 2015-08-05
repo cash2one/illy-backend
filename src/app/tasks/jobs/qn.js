@@ -1,7 +1,7 @@
 /**
  * Created by Frank on 15/7/18.
  */
-
+'use strict';
 var co = require('co');
 var qn = require('qiniu');
 var _ = require('lodash');

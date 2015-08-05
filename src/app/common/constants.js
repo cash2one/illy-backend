@@ -1,7 +1,7 @@
 /**
  * Created by Frank on 14/11/27.
  */
-
+'use strict';
 
 module.exports = {
     // 角色

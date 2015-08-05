@@ -1,8 +1,9 @@
 /**
  * Created by Frank on 15/7/24.
  */
-var QnGarbage = require('../../models').QnGarbage;
 
+'use strict';
+var QnGarbage = require('../../models').QnGarbage;
 
 var qnApi = {
 

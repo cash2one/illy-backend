@@ -68,11 +68,6 @@ var postSchema = new Schema({
 
 });
 
-postSchema.pre('update', function (next) {
-    this.update({updated: Date.now()});
-    next();
-});
-
 module.exports = {
     Post: mongoose.model('Post', postSchema)
 };

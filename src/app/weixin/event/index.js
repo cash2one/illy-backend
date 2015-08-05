@@ -1,6 +1,7 @@
 /**
  * Created by Frank on 15/7/6.
  */
+'use strict';
 var co = require('co');
 var _ = require('lodash');
 var models = require('../../models');

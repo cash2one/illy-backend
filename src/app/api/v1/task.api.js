@@ -1,12 +1,15 @@
 /**
  * Created by Frank on 15/7/27.
  */
+
+'use strict';
 var models = require('../../models');
 var Task = models.Task;
 var TaskRecord = models.TaskRecord;
 var Post = models.Post;
 var Activity = models.Activity;
 var ActivityCollect = models.ActivityCollect;
+var Student = models.Student;
 
 
 var taskApi = {
@@ -62,12 +65,15 @@ var taskApi = {
         var user = this.state.jwtUser;
         var userId = user._id;
         var taskId = this.params.taskId;
-        var task = yield Task.findById(taskId, 'taskType state item')
+        var task = yield Task.findById(taskId, 'taskType state item scoreAward')
             .lean()
             .exec();
 
         if (!task) {
             this.throw(400, '任务不存在');
+        }
+        if (task.state === 1) {
+            this.throw(400, '任务已经关闭');
         }
         var taskRecord = new TaskRecord({
             student: userId,
@@ -75,6 +81,7 @@ var taskApi = {
             schoolId: user.schoolId
         });
         yield taskRecord.save().exec();
+        var student = yield Student.findByIdAndUpdate(userId, {$inc: {score: task.scoreAward}}, {new: true}).exec();
         var itemId = task.item;
         var ItemModel;
         switch (task.taskType) {
@@ -89,6 +96,7 @@ var taskApi = {
             yield Task.update({_id: taskId}, {$inc: {shareCount: 1, participants: 1}}).exec();
             yield ItemModel.update({_id: itemId}, {$inc: {shareCount: 1}}).exec();
         }
+        this.body = {score: student.score};
     },
 
 

@@ -64,7 +64,7 @@ var homeworkApi = {
                 $elemMatch: {
                     student: userId,
                     state: {$in: [1, 2]},
-                    'wrongCollect.1': {$exists: true}
+                    'wrongCollect.0': {$exists: true}
                 }
             }
         }, {performances: {$elemMatch: {student: userId}}})
@@ -74,17 +74,68 @@ var homeworkApi = {
             .lean()
             .exec();
         _.forEach(homeworkList, function (homework) {
-            homework.wrongNumber = homework.performances[0].wrongCollect.length
+            homework.wrongNumber = homework.performances[0].wrongCollect.length;
+            homework.finishedTime = homework.performances[0].finishedTime;
         });
         this.body = homeworkList;
 
+    },
+
+    mistakeDetail: function *() {
+        var jwtUser = this.state.jwtUser,
+            userId = jwtUser._id,
+            homeworkId = this.params.homeworkId;
+        var homework = yield   Homework.findOne({_id: homeworkId},
+            {performances: {$elemMatch: {student: userId}}})
+            .select('title exercises')
+            .lean().exec();
+        var performance = homework.performances[0],
+            exercises = homework.exercises,
+            wrongExercises = [];
+        if (performance) {
+            performance.homework = homework.title;
+            var wrongCollect = performance.wrongCollect;
+            // 标记错题
+            if (!_.isEmpty(wrongCollect)) {
+                _.forEach(wrongCollect, function (wrong) {
+                    var exercise = exercises[wrong.exerciseId - 1];
+                    exercise.wrongAnswer = wrong.answer;
+                    wrongExercises.push(exercise);
+                });
+            }
+        }
+        this.body = wrongExercises;
     },
 
     /**
      * 评语列表
      */
     commonList: function *() {
+        var jwtUser = this.state.jwtUser,
+            userId = jwtUser._id,
+            schoolId = jwtUser.schoolId,
+            offset = this.request.query.offset || 0,
+            limit = this.request.query.limit || 10;
 
+        var homeworkList = yield Homework.find({
+            schoolId: schoolId,
+            performances: {
+                $elemMatch: {
+                    student: userId,
+                    state: {$in: [1, 2]}
+                }
+            }
+        }, {performances: {$elemMatch: {student: userId}}})
+            .select('title')
+            .skip(offset)
+            .limit(limit)
+            .lean()
+            .exec();
+        _.forEach(homeworkList, function (homework) {
+            homework.comment = homework.performances[0].comment;
+            delete homework.performances;
+        });
+        this.body = homeworkList;
     },
 
 
@@ -113,6 +164,7 @@ var homeworkApi = {
         var studentId = jwtUser._id;
         var numOfExercise = postData.numOfExercise;
         var wrongCount = postData.wrongCollect ? postData.wrongCollect.length : 0;
+        var spendSeconds = postData.spendSeconds;
         var rightCount = numOfExercise - wrongCount;
         _.forEach(postData.audioAnswers, function (audioAnswer) {
             var key = jwtUser.schoolId + '/' + audioAnswer.answer;
@@ -127,6 +179,7 @@ var homeworkApi = {
             $set: {
                 'performances.$': _.assign(postData, {
                     student: studentId,
+                    spendSeconds: spendSeconds,
                     finishedTime: new Date(),
                     state: 1
                 })

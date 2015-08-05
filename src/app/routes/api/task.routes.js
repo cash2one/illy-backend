@@ -1,6 +1,8 @@
 /**
  * Created by Frank on 15/7/27.
  */
+
+'use strict';
 var task = require('../../api/v1/task.api');
 module.exports = function (api) {
 
@@ -14,6 +16,7 @@ module.exports = function (api) {
      * @apiParam {Number} offset=0  偏移
      * @apiParam {Number} limit=5 数量
      * @apiSuccess {Object[]} response
+     * @apiSuccess {String} response._id 任务ID
      * @apiSuccess {String} response.name 任务名称
      * @apiSuccess {String} response.taskType 任务类型(0: 文章分享 1:活动分享)
      * @apiSuccess {String} response.scoreAward 奖励积分数
@@ -22,7 +25,7 @@ module.exports = function (api) {
      *
      *
      */
-    api.get('/api/v1/tasks', task.list);
+    api.get('/tasks', task.list);
 
     /**
      * @api {get} /api/v1/tasks/:taskId  获取任务详情
@@ -34,7 +37,7 @@ module.exports = function (api) {
      *
      *
      */
-    api.get('/api/v1/tasks/:taskId', task.read);
+    api.get('/tasks/:taskId', task.read);
 
     /**
      * @api {put} /api/v1/tasks/:taskId/share 分享通知接口
@@ -46,7 +49,7 @@ module.exports = function (api) {
      *
      *
      */
-    api.put('/api/v1/tasks/:taskId/share', task.share);
+    api.put('/tasks/:taskId/share', task.share);
 
 
     /**
@@ -59,7 +62,7 @@ module.exports = function (api) {
      *
      *
      */
-    api.post('/api/v1/activities/:activityId/info', task.activityInfo);
+    api.post('/activities/:activityId/info', task.activityInfo);
 
 
 };

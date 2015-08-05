@@ -1,7 +1,7 @@
 /**
  * Created by Frank on 15/7/8.
  */
-
+'use strict';
 var site = require('../../api/v1/site.api');
 module.exports = function (api) {
 

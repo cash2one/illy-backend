@@ -1,7 +1,7 @@
 /**
  * Created by Frank on 15/7/1.
  */
-
+'use strict';
 var models = require('../../models');
 var Student = models.Student;
 var ScoreExchange = models.ScoreExchange;
@@ -33,19 +33,16 @@ var scoreApi = {
         var jwtUser = this.state.jwtUser;
         var userId = jwtUser._id;
         var schoolId = jwtUser.schoolId;
-        var student = yield Student.findById(userId, 'score -_id').lean().exec();
+        var student = yield Student.findById(userId, 'displayName avatar score -_id').lean().exec();
         if (!student) {
             this.throw(400, '当前学生不存在');
         }
         var score = student.score || 0;
-        var count = yield Student.find({
+        student.rank = yield Student.find({
             schoolId: schoolId, state: 0,
             score: {$gt: score}
         }).count().exec();
-        this.body = {
-            score: score,
-            rank: count + 1
-        };
+        this.body = student;
     },
 
     /**

@@ -1,3 +1,5 @@
+'use strict';
+
 var jsSHA = require('jssha');
 var config = require('../../../config/config');
 

@@ -2,7 +2,7 @@
  *
  * Created by Frank on 15/7/1.
  */
-
+'use strict';
 var score = require('../../api/v1/score.api');
 
 /**
@@ -16,7 +16,7 @@ module.exports = function (api) {
 
     /**
      *
-     * @api {get} /api/v1/score/topTen  积分榜top10
+     * @api {get} /api/v1/score/rank/topTen  积分榜top10
      * @apiName ScoreRankTop10
      * @apiGroup Score
      * @apiVersion 0.0.1
@@ -48,7 +48,7 @@ module.exports = function (api) {
 
     /**
      *
-     * @api {get} /api/v1/score/me  用户积分及排名
+     * @api {get} /api/v1/score/rank/me  用户积分及排名
      * @apiName ScoreRankOfMe
      * @apiGroup Score
      * @apiVersion 0.0.1
@@ -82,7 +82,7 @@ module.exports = function (api) {
      * @apiParam {Number} offset=0 数据查询偏移数量 (用于分页)
      * @apiSuccess {Object[]} response 返回的response数据
      * @apiSuccess {String} response.productName 商品名称
-     * @apiSuccess {String} response.image 图片
+     * @apiSuccess {String} response.imageKey 图片
      * @apiSuccess {Number} response.score  花费积分
      * @apiSuccess {Number} response.stock 库存
      * @apiSuccess {Number} response.exchangeTimes 兑换次数

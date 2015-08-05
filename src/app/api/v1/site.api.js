@@ -1,7 +1,7 @@
 /**
  * Created by Frank on 15/7/2.
  */
-
+'use strict';
 
 var models = require('../../models');
 var Category = models.Category;
@@ -96,6 +96,7 @@ var siteApi = {
      */
     share: function *() {
         var postId = this.params.postId;
+        Post.findById(postId).update({$inc:{shareCount:1}}).exec();
         yield Post.update({_id: postId}, {$inc: {shareCount: 1}}).exec();
         this.body = {};
     }

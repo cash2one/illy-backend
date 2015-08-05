@@ -2,6 +2,7 @@
  *
  * Created by Frank on 15/7/3.
  */
+'use strict';
 
 var parser = require('./xmlParser');
 var eventHandler = require('./event');

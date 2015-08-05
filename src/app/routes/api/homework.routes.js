@@ -82,7 +82,7 @@ module.exports = function (api) {
      * @apiParam{Object[]} wrongCollect 错题列表
      * @apiParam{Number} wrongCollect.exerciseId 题目序号
      * @apiParam{String} wrongCollect.answer  错误答案
-     *
+     * @apiParam{Number} spendSeconds 花费秒数
      * @apiParam{Object[]} audioAnswers 录音答案
      * @apiParam{Number} audioAnswers.exerciseId 题目序号
      * @apiParam{String} audioAnswers.answer  录音url
@@ -111,11 +111,39 @@ module.exports = function (api) {
      *
      * @apiSuccess {Object[]} response 返回的response数据
      * @apiSuccess {String} response._id 作业ID
-     * @apiSuccess {Date} response.title 作业标题
+     * @apiSuccess {String} response.title 作业标题
      * @apiSuccess {Number} response.wrongNumber 错题数量
+     * @apiSuccess {Date} response.finishedTime 完成时间
      *
      */
+
     api.get('/homework/mistake', homework.mistakeList);
+
+
+    /**
+     *
+     * @api {get} /api/v1/homework/mistake/:homeworkId 错题详情
+     * @apiName GetMistakeHomeworkDetail
+     * @apiGroup Homework
+     * @apiVersion 0.0.1
+     * @apiHeader {String} Authorization Json web token
+     * @apiPermission 认证用户
+     *
+     * @apiSuccess {Object[]} exercises 题目列表
+     * @apiSuccess {Number} exercises.sequence 题目序号
+     * @apiSuccess {Number} exercises.eType 题目类型 (0:文字选择  1:图片选择 2:填空题)
+     * @apiSuccess {String} exercises.question 题干
+     * @apiSuccess {String} exercises.description 题目说明
+     * @apiSuccess {Object[]} exercises.choices 选项列表 (只有选择题有该字段)
+     * @apiSuccess {String} exercises.choices.title 选项标题 (例如 A B C D )
+     * @apiSuccess {String} exercises.choices.content 选项内容
+     * @apiSuccess {String} exercises.answer 答案
+     * @apiSuccess {String} exercises.wrongAnswer 错误答案
+     * @apiSuccess {String} exercises.analysis 答案解析(可选)
+     *
+     */
+    api.get('/homework/mistake/:homeworkId', homework.mistakeDetail);
+
 
     /**
      *

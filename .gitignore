@@ -23,6 +23,7 @@ coverage
 build/Release
 
 #doc
+docs
 doc
 
 # Dependency directory

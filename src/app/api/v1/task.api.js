@@ -80,7 +80,7 @@ var taskApi = {
             task: taskId,
             schoolId: user.schoolId
         });
-        yield taskRecord.save().exec();
+        yield taskRecord.save();
         var student = yield Student.findByIdAndUpdate(userId, {$inc: {score: task.scoreAward}}, {new: true}).exec();
         var itemId = task.item;
         var ItemModel;
@@ -109,11 +109,11 @@ var taskApi = {
             this.throw(400, '活动不存在');
         }
         var info = new ActivityCollect({
-            activity: activity,
+            activity: activity._id,
             info: this.request.body.info,
             schoolId: activity.schoolId
         });
-        yield info.save().exec();
+        yield info.save();
 
     }
 };

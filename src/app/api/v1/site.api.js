@@ -91,14 +91,13 @@ var siteApi = {
         this.body = yield Post.findByIdAndUpdate(postId, {$inc: {visitCount: 1}}, {new: true}).exec();
     },
 
+
     /**
      * 分享接口，用于更新
      */
     share: function *() {
         var postId = this.params.postId;
-        Post.findById(postId).update({$inc:{shareCount:1}}).exec();
-        yield Post.update({_id: postId}, {$inc: {shareCount: 1}}).exec();
-        this.body = {};
+        this.body = yield Post.update({_id: postId}, {$inc: {shareCount: 1}}).exec();
     }
 };
 

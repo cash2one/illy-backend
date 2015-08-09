@@ -66,6 +66,18 @@ var userApi = {
             yield cache.set('openid:' + openid, token, 3600 * 24);
             this.body = token;
         }
+    },
+
+    /**
+     *
+     * 修改个人信息
+     *
+     */
+    update: function *() {
+        var user = this.state.jwtUser;
+        var userId = user._id;
+        this.body = yield User.findByIdAndUpdate(userId, this.request.body, {new: true}).exec();
+
     }
 };
 

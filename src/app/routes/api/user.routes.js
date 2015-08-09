@@ -27,7 +27,7 @@ module.exports = function (api) {
      * @apiSuccess {String} username 用户名
      * @apiSuccess {String} displayName 真实姓名
      * @apiSuccess {String} gender 性别
-     * @apiSuccess {String} avatar 用户头像URL (oss相对URL)
+     * @apiSuccess {String} avatar 用户头像URL (相对URL)
      * @apiSuccess {String} phone 用户电话
      * @apiSuccess {String} parent 家长名字
      * @apiSuccess {String} onSchool 用户所在公办学校
@@ -75,5 +75,29 @@ module.exports = function (api) {
      *
      */
     api.get('/public/auth', auth.getOpenidToken, user.auth);
+
+
+    /**
+     * @api {put} /api/v1/profile 修改当前用户信息
+     * @apiName UpdateUserProfile
+     * @apiGroup User
+     * @apiVersion 0.0.1
+     * @apiHeader {String} Authorization Json web token
+     * @apiPermission 认证用户
+     *
+     * @apiParam {String} displayName 真实姓名
+     * @apiParam {String} gender 性别
+     * @apiParam {String} phone 用户电话
+     * @apiParam {String} parent 家长名字
+     * @apiParam {String} onSchool 用户所在公办学校
+     * @apiParam {String} grade 年级
+     *
+     * @apiUse ClientRequestError
+     * @apiSuccessExample 成功响应示例
+     *     HTTP/1.1 200 OK
+     *
+     *
+     */
+    api.put('/profile', user.update);
 
 };

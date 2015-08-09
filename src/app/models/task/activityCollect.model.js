@@ -14,7 +14,10 @@ var activityCollectSchema = new Schema({
         index: true
     },
 
-    info: [String],
+    info: [{
+        key: String,
+        value: String
+    }],
 
     created: {
         type: Date,
@@ -25,7 +28,6 @@ var activityCollectSchema = new Schema({
         type: ObjectId,
         index: true
     }
-
 
 });
 

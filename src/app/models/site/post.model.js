@@ -39,7 +39,10 @@ var postSchema = new Schema({
         type: Number,
         default: 0
     },
-
+    like: {
+        type: Number,
+        default: 0
+    },
     //是否轮播
     isSlide: {
         type: Number,

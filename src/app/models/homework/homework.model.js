@@ -9,10 +9,6 @@ var states = require('../../common/constants').states;
 var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
 
-var choiceSchema = new Schema({
-    title: String,
-    content: String
-}, {_id: false});
 
 var exerciseSchema = new Schema({
     // 习题类型 (choice and completion)
@@ -33,7 +29,11 @@ var exerciseSchema = new Schema({
         type: String
     },
     //用于选择题
-    choices: [choiceSchema],
+    choices: [{
+        title: String,
+        content: String,
+        _id: false
+    }],
     // 答案
     answer: {
         type: String
@@ -44,10 +44,6 @@ var exerciseSchema = new Schema({
     }
 }, {_id: false});
 
-var answerSchema = new Schema({
-    exerciseId: Number,
-    answer: String
-}, {_id: false});
 
 var performanceSchema = new Schema({
 
@@ -77,10 +73,18 @@ var performanceSchema = new Schema({
     },
 
     // 错误答案
-    wrongCollect: [answerSchema],
+    wrongCollect: [{
+        exercisedId: Number,
+        answer: String,
+        _id: false
+    }],
 
     // 录音题答案
-    audioAnswers: [answerSchema],
+    audioAnswers: [{
+        exercisedId: Number,
+        answer: String,
+        _id: false
+    }],
 
     // 评论
     comment: {

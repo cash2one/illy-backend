@@ -8,10 +8,6 @@ var mongoose = require('mongoose');
 var _ = require('lodash');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
-var choiceSchema = new Schema({
-    title: String,
-    content: String
-}, {_id: false});
 
 var exerciseSchema = new Schema({
     // 习题类型 (choice and completion)
@@ -35,7 +31,11 @@ var exerciseSchema = new Schema({
         type: String
     },
     //用于选择题
-    choices: [choiceSchema],
+    choices: [{
+        title: String,
+        content: String,
+        _id: false
+    }],
     // 答案
     answer: {
         type: String
@@ -82,11 +82,6 @@ var quizSchema = new Schema({
     },
     // 创建时间
     createdTime: {
-        type: Date,
-        default: Date.now
-    },
-
-    updateTime: {
         type: Date,
         default: Date.now
     },

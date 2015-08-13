@@ -81,6 +81,9 @@ var homeworkApi = {
 
     },
 
+    /**
+     * 错题集
+     */
     mistakeDetail: function *() {
         var jwtUser = this.state.jwtUser,
             userId = jwtUser._id,

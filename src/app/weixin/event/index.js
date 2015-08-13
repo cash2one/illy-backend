@@ -23,44 +23,33 @@ var messageTemplate = '<xml>' +
  */
 var handleSubscribe = co.wrap(function *(msg) {
     var eventKey = msg.EventKey;
-    if (eventKey) {
-        var scene = eventKey.split('_')[1];
-        //说明是关注学校场景值二维码
-        if (scene.length === 5) {
-            var School = models.School;
-            var school = yield School.findOne({username: scene}, '_id schoolName').lean().exec();
-            if (school) {
-                return format(messageTemplate,
-                    {
-                        to: msg.FromUserName,
-                        from: msg.ToUserName,
-                        createTime: new Date().getTime(),
-                        content: '欢迎加入 [' + school.schoolName + ']' + '家校云。'
-                    });
-            }
-        }
-        // 关注学生场景值二维码
-        else {
-            var Student = models.Student;
-            var student = yield Student.findOne({username: scene}, '_id displayName').lean().exec();
-            if (student) {
-                return format(messageTemplate,
-                    {
-                        to: msg.FromUserName,
-                        from: msg.ToUserName,
-                        createTime: new Date().getTime(),
-                        content: '你好,' + student.displayName + '同学,欢迎关注家校云。'
-                    });
-            }
-        }
+    if (!eventKey) {
+        return format(messageTemplate,
+            {
+                to: msg.FromUserName,
+                from: msg.ToUserName,
+                createTime: new Date().getTime(),
+                content: '欢迎加入家校云'
+            });
     }
-    return format(messageTemplate,
-        {
-            to: msg.FromUserName,
-            from: msg.ToUserName,
-            createTime: new Date().getTime(),
-            content: '欢迎加入家校云'
+    var scene = eventKey.split('_')[1];
+    //说明是关注学校场景值二维码
+    var School = models.School;
+    var school = yield School.findOne({username: scene}, '_id schoolName').lean().exec();
+    if (school) {
+        var visitor = new models.Visitor({
+            schoolId: school._id,
+            openid: msg.ToUserName
         });
+        yield visitor.save();  //保持访客信息
+        return format(messageTemplate,
+            {
+                to: msg.FromUserName,
+                from: msg.ToUserName,
+                createTime: new Date().getTime(),
+                content: '欢迎加入 [' + school.schoolName + ']' + '家校云。'
+            });
+    }
 });
 
 /**
@@ -75,6 +64,12 @@ var handleUnSubscribe = co.wrap(function* (msg) {
     return '';
 });
 
+
+/**
+ *
+ * 其他事件
+ *
+ */
 var handleOther = co.wrap(function*() {
     return '';
 });

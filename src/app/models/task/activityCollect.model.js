@@ -14,9 +14,14 @@ var activityCollectSchema = new Schema({
         index: true
     },
 
-    info: [{
+    name: String,
+
+    phone: String,
+
+    others: [{
         key: String,
-        value: String
+        value: String,
+        _id: false
     }],
 
     created: {

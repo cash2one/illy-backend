@@ -3,7 +3,34 @@
  */
 'use strict';
 var site = require('../../api/v1/site.api');
+
 module.exports = function (api) {
+    /**
+     *
+     * @api {get} /api/v1/categories 分类列表
+     * @apiName ListCategories
+     * @apiGroup Site
+     * @apiVersion 0.0.1
+     * @apiPermission 认证用户
+     * @apiHeader {String} Authorization Json web token
+     * @apiSuccess {Object[]} response
+     * @apiSuccess {String} response.name 分类名称
+     * @apiSuccess {String} response._id 分类ID
+     *
+     * @apiSuccessExample 成功响应示例
+     *     HTTP/1.1 200 OK
+     *     [
+     *       { name : 'xxx',
+     *         _id : 'xxx'
+     *       },
+     *
+     *       { name: 'xxx',
+     *          _id:'xxx'
+     *        }
+     *      ]
+     *
+     */
+    api.get('/categories', site.listCategories);
 
 
     /**
@@ -118,33 +145,6 @@ module.exports = function (api) {
 
 
     /**
-     * @api {get} /api/v1/posts/:postId 文章详情
-     * @apiName ReadPost
-     * @apiGroup Site
-     * @apiVersion 0.0.1
-     * @apiPermission 认证用户
-     * @apiHeader {String} Authorization Json web token
-     * @apiSuccess {String} title 文章标题
-     * @apiSuccess {String} content 文章内容
-     * @apiSuccess {Date} created  发布时间
-     * @apiSuccess {Number} shareCount 分享数量
-     * @apiSuccess {Number} visitCount 访问量
-     *
-     * @apiSuccessExample 成功响应示例
-     *     HTTP/1.1 200 OK
-     *     {
-   *       title        : xxx,
-   *       content      : xxx,
-   *       created      : xxx,
-   *       shareCount   : xxx,
-   *       visitCount   : xxx
-   *     }
-     *
-     */
-    api.get('/posts/:postId([a-f0-9]{24})', site.readPost);
-
-
-    /**
      * @api {get} /api/v1/posts/hot 热门文章
      * @apiName PostsOfHot
      * @apiGroup Site
@@ -174,14 +174,56 @@ module.exports = function (api) {
 
 
     /**
-     * @api {put} /api/v1/posts/:postId/share  更新分享数
+     * @api {get} /api/v1/public/posts/:postId 文章详情
+     * @apiName ReadPost
+     * @apiGroup Site
+     * @apiVersion 0.0.1
+     * @apiPermission public
+     * @apiHeader {String} Authorization Json web token
+     * @apiSuccess {String} title 文章标题
+     * @apiSuccess {String} content 文章内容
+     * @apiSuccess {Date} created  发布时间
+     * @apiSuccess {Number} shareCount 分享数量
+     * @apiSuccess {Number} visitCount 访问量
+     *
+     * @apiSuccessExample 成功响应示例
+     *     HTTP/1.1 200 OK
+     *     {
+     *       title        : xxx,
+     *       content      : xxx,
+     *       created      : xxx,
+     *       shareCount   : xxx,
+     *       visitCount   : xxx
+     *     }
+     *
+     */
+
+
+    api.get('/public/posts/:postId([a-f0-9]{24})', site.readPost);
+
+    /**
+     * @api {put} /api/v1/public/posts/:postId/share  更新分享数
      * @apiName UpdateShareCount
      * @apiGroup Site
      * @apiVersion 0.0.1
-     * @apiPermission 认证用户
+     * @apiPermission public
      * @apiHeader {String} Authorization Json web token
      *
      */
-    api.put('/posts/:postId([a-f0-9]{24})/share', site.share);
+    api.put('/public/posts/:postId([a-f0-9]{24})/share', site.share);
+
+
+    /**
+     * @api {put} /api/v1/public/posts/:postId/like 点赞
+     * @apiName UpdateLike
+     * @apiGroup Site
+     * @apiVersion 0.0.1
+     * @apiPermission public
+     * @apiHeader {String} Authorization Json web token
+     *
+     */
+    api.put('/public/posts/:postId([a-f0-9]{24})/like', site.like);
+
+
 
 };

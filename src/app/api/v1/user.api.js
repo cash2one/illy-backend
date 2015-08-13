@@ -10,7 +10,7 @@ var config = require('../../../config/config');
 var models = require('../../models');
 var Visitor = models.Visitor;
 var User = models.Student;
-
+var LoginLog = models.LoginLog;
 
 var userApi = {
     /**
@@ -27,14 +27,16 @@ var userApi = {
     bind: function *() {
         var formUser = this.request.body;
         var openid = formUser.openid;
+        var username = formUser.username;
+        var password = formUser.password;
         if (!openid) {
             this.throw(400, '缺少微信绑定信息');
         }
-        if (!formUser || !formUser.username || !formUser.password) {
+        if (!username || !password) {
             this.throw(400, '用户名或者密码不能为空');
         }
-        var user = yield User.findOne({username: formUser.username, state: 0}, 'username password schoolId').exec();
-        if (!user || !user.authenticate(formUser.password)) {
+        var user = yield User.findOne({username: username, state: 0}, 'username password schoolId').exec();
+        if (!user || !user.authenticate(password)) {
             this.throw(400, '用户名或密码错误');
         }
         yield User.update({_id: user._id}, {$addToSet: {openids: openid}}).exec();
@@ -49,15 +51,17 @@ var userApi = {
      * 验证用户是否绑定微信
      */
     auth: function *() {
-        var weixinToken = this.request.weixinToken;
-        var openid = weixinToken.openid;
+        var openid = this.request.weixinToken.openid;
         var token = yield cache.get('openid:' + openid);
         if (token) {
             this.body = token;
         } else {
-            var user = yield User.findOne({openids: openid}, 'schoolId').exec();
-            if (!user) {
+            var type = this.request.query.authType;
+            var user;
+            if (type && type === 'visitor') {
                 user = yield Visitor.findOne({openid: openid}, 'schoolId').exec();
+            } else {
+                user = yield User.findOne({openids: openid}, 'schoolId').exec();
             }
             if (!user) {
                 this.throw(401, openid);
@@ -77,6 +81,15 @@ var userApi = {
         var user = this.state.jwtUser;
         var userId = user._id;
         this.body = yield User.findByIdAndUpdate(userId, this.request.body, {new: true}).exec();
+
+    },
+
+
+    /**
+     * 修改头像
+     *
+     */
+    avatar: function *() {
 
     }
 };

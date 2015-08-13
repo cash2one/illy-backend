@@ -5,7 +5,7 @@
 
 var cache = require('../../common/cache'),
     co = require('co'),
-    mongoose = require('mongoose');
+    models = require('../../models');
 
 /**
  * 微信取消关注任务处理
@@ -14,9 +14,11 @@ var cache = require('../../common/cache'),
  */
 var unSubscribe = co.wrap(function*(data, done) {
     var openid = data.openid;
-    var Student = mongoose.model('Student');
+    var Student = models.Student;
+    var Visitor = models.Visitor;
     // 解除用户绑定
     yield Student.update({openids: openid}, {$pull: {openids: openid}}).exec();
+    yield Visitor.remove({openid: openid});
     yield cache.delete('openid:' + openid);
     done();
 });

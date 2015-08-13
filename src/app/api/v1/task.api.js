@@ -82,39 +82,8 @@ var taskApi = {
         });
         yield taskRecord.save();
         var student = yield Student.findByIdAndUpdate(userId, {$inc: {score: task.scoreAward}}, {new: true}).exec();
-        var itemId = task.item;
-        var ItemModel;
-        switch (task.taskType) {
-            case(0):
-                ItemModel = Post;
-                break;
-            case(1):
-                ItemModel = Activity;
-                break;
-        }
-        if (ItemModel) {
-            yield Task.update({_id: taskId}, {$inc: {shareCount: 1, participants: 1}}).exec();
-            yield ItemModel.update({_id: itemId}, {$inc: {shareCount: 1}}).exec();
-        }
+        yield Task.update({_id: taskId}, {$inc: {shareCount: 1, participants: 1}}).exec();
         this.body = {score: student.score};
-    },
-
-
-    /**
-     * 添加活动信息
-     */
-    activityInfo: function *() {
-        var activity = Activity.findById(this.params.activityId, 'schoolId').exec();
-        if (!activity) {
-            this.throw(400, '活动不存在');
-        }
-        var info = new ActivityCollect({
-            activity: activity._id,
-            info: this.request.body.info,
-            schoolId: activity.schoolId
-        });
-        yield info.save();
-
     }
 };
 

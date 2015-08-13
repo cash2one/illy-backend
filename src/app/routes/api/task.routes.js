@@ -4,6 +4,7 @@
 
 'use strict';
 var task = require('../../api/v1/task.api');
+
 module.exports = function (api) {
 
     /**
@@ -39,6 +40,7 @@ module.exports = function (api) {
      */
     api.get('/tasks/:taskId', task.read);
 
+
     /**
      * @api {put} /api/v1/tasks/:taskId/share 分享通知接口
      * @apiName ShareTask
@@ -50,19 +52,5 @@ module.exports = function (api) {
      *
      */
     api.put('/tasks/:taskId/share', task.share);
-
-
-    /**
-     * @api {post} /api/v1/activities/:activityId/info 添加活动报名信息
-     * @apiName AddActivityInfo
-     * @apiGroup Task
-     * @apiVersion 0.0.1
-     * @apiPermission 认证用户
-     * @apiHeader {String} Authorization Json web token
-     *
-     *
-     */
-    api.post('/activities/:activityId/info', task.activityInfo);
-
 
 };

@@ -11,6 +11,17 @@ var Post = models.Post;
 var siteApi = {
 
     /**
+     *
+     * 列出当前分类
+     *
+     */
+    listCategories: function *() {
+        var jwtUser = this.state.jwtUser;
+        var schoolId = jwtUser.schoolId;
+        this.body = yield Category.find({schoolId: schoolId, disabled: 0}, 'name').lean().exec();
+    },
+
+    /**
      * 列出分类及对应文章列表
      */
     listCategoriesAndPosts: function *() {
@@ -22,7 +33,7 @@ var siteApi = {
         for (var i = 0; i < categories.length; i++) {
             var category = categories[i];
             ret[i] = category;
-            var promise = Post.find({category: category._id}, 'title image shareCount visitCount')
+            var promise = Post.find({category: category._id}, '-content')
                 .lean()
                 .limit(4)
                 .exec();
@@ -42,7 +53,7 @@ var siteApi = {
         var offset = this.request.query.offset || 0;
         var limit = this.request.query.limit || 6;
         var posts = yield Post.find({category: this.params.categoryId})
-            .select('title image shareCount visitCount')
+            .select('-content')
             .lean()
             .skip(offset)
             .limit(limit)
@@ -58,7 +69,7 @@ var siteApi = {
         var schoolId = jwtUser.schoolId;
         var limit = this.request.query.limit || 5;
         var posts = yield Post.find({isSlide: 1, schoolId: schoolId})
-            .select('image title shareCount visitCount')
+            .select('-content')
             .limit(limit)
             .lean()
             .exec();
@@ -75,7 +86,7 @@ var siteApi = {
         var limit = this.request.query.limit || 5;
         var posts = yield Post.find({schoolId: schoolId})
             .sort('-visitCount')
-            .select('image title shareCount visitCount')
+            .select('-content')
             .limit(limit)
             .lean()
             .exec();
@@ -98,7 +109,17 @@ var siteApi = {
     share: function *() {
         var postId = this.params.postId;
         this.body = yield Post.update({_id: postId}, {$inc: {shareCount: 1}}).exec();
+    },
+
+
+    /**
+     * 点赞
+     */
+    like: function *() {
+        var postId = this.params.postId;
+        this.body = yield Post.update({_id: postId}, {$inc: {like: 1}}).exec();
     }
+
 };
 
 

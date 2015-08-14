@@ -26,7 +26,6 @@ var taskApi = {
             .where('schoolId', schoolId)
             .where('state', 0)
             .where('_id').nin(records).exec();
-
     },
 
     /**

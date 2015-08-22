@@ -36,6 +36,7 @@ var siteApi = {
             var promise = Post.find({category: category._id}, '-content')
                 .lean()
                 .limit(4)
+                .sort('-created')
                 .exec();
             postsList.push(promise);
         }

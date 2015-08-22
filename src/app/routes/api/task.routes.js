@@ -42,8 +42,8 @@ module.exports = function (api) {
 
 
     /**
-     * @api {put} /api/v1/tasks/:taskId/share 分享通知接口
-     * @apiName ShareTask
+     * @api {put} /api/v1/tasks/:taskId/done 完成任务通知
+     * @apiName FinishTask
      * @apiGroup Task
      * @apiVersion 0.0.1
      * @apiPermission 认证用户
@@ -51,6 +51,6 @@ module.exports = function (api) {
      *
      *
      */
-    api.put('/tasks/:taskId/share', task.share);
+    api.put('/tasks/:taskId/done', task.done);
 
 };

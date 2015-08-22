@@ -56,7 +56,10 @@ var activitySchema = new Schema({
         type: Number,
         default: 0
     },
-
+    like: {
+        type: Number,
+        default: 0
+    },
     schoolId: {
         type: ObjectId,
         require: true

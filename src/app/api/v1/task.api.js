@@ -58,9 +58,9 @@ var taskApi = {
     },
 
     /**
-     * 处理分享事件
+     * 做任务
      */
-    share: function *() {
+    done: function *() {
         var user = this.state.jwtUser;
         var userId = user._id;
         var taskId = this.params.taskId;

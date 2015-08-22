@@ -28,7 +28,6 @@ module.exports = function () {
         var contentType = this.request.headers['content-type'];
         if (contentType === 'text/xml') {
             try {
-                console.log(this.request.url);
                 yield* xmlParser(this);
             }
             catch (err) {

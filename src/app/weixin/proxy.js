@@ -13,8 +13,8 @@ var msgHandler = require('./msg');
  * @returns {Function}
  */
 module.exports = function () {
-    var regx = new RegExp('^/msg');
     return function*(next) {
+        var regx = new RegExp('^/msg');
         var url = this.url;
         if (!regx.test(url)) {
             yield next;
@@ -22,17 +22,18 @@ module.exports = function () {
             var msg = this.request.xml;
             if (!msg) {
                 console.error('Receive unresolved message from : ', url);
-                this.body = '';
-                return;
+                return this.body = '';
             }
+            var ret;
             // 处理事件类型消息
             if (msg.MsgType === 'event') {
-                this.body = yield eventHandler(msg);
+                ret = yield eventHandler(msg);
             }
             // 处理普通类型消息
             else {
-                this.body = yield msgHandler(msg);
+                ret = yield msgHandler(msg);
             }
+            this.body = ret;
         }
     };
 };

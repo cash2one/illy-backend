@@ -19,7 +19,7 @@ module.exports = function (app) {
     //loading data models
     require('../app/models');
 
-    //parser weixin xml msg
+    //parser xml request body
     app.use(xmlParser());
 
     //handle weixin event and msg

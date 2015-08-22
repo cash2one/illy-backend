@@ -74,14 +74,14 @@ var performanceSchema = new Schema({
 
     // 错误答案
     wrongCollect: [{
-        exercisedId: Number,
+        exerciseId: Number,
         answer: String,
         _id: false
     }],
 
     // 录音题答案
     audioAnswers: [{
-        exercisedId: Number,
+        exerciseId: Number,
         answer: String,
         _id: false
     }],

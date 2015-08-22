@@ -60,7 +60,8 @@ var userApi = {
             var user;
             if (type && type === 'visitor') {
                 user = yield Visitor.findOne({openid: openid}, 'schoolId').exec();
-            } else {
+            }
+            if (!user) {
                 user = yield User.findOne({openids: openid}, 'schoolId').exec();
             }
             if (!user) {

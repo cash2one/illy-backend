@@ -60,6 +60,21 @@ module.exports = function (api) {
      */
     api.post('/public/bind', user.bind);
 
+
+    /**
+     * @api {post} /api/v1/unbind 解除绑定
+     * @apiName BindWeixin
+     * @apiGroup User
+     * @apiVersion 0.0.1
+     * @apiPermission public
+     * @apiUse ClientRequestError
+     * @apiSuccess {String} response Json web token
+     * @apiSuccessExample 成功响应示例
+     *     HTTP/1.1 200 OK
+     *
+     */
+    api.post('/unbind', user.unbind);
+
     /**
      * @api {get} /api/v1/public/auth 微信认证
      * @apiName AuthWeixin
@@ -99,5 +114,27 @@ module.exports = function (api) {
      *
      */
     api.put('/profile', user.update);
+
+    /**
+     * @api {put} /api/v1/avatar 修改当前用户头像
+     * @apiName UpdateUserAvatar
+     * @apiGroup User
+     * @apiVersion 0.0.1
+     * @apiHeader {String} Authorization Json web token
+     * @apiPermission 认证用户
+     *
+     * @apiParam {String} avatar 头像mediaId
+     *
+     * @apiUse ClientRequestError
+     * @apiSuccessExample 成功响应示例
+     *     HTTP/1.1 200 OK
+     *
+     *
+     */
+    api.put('/avatar', user.avatar);
+
+
+    api.post('/public/qn/avatarUploaded', user.avatarUploaded);
+
 
 };

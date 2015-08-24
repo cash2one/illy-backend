@@ -103,8 +103,8 @@ var getMedia = co.wrap(function* (mediaId) {
         http.get(url, function (res) {
             var ret = {};
             var error = res.headers['content-type'] === 'text/plain';
-            var chunks = [],
-                size = 0;
+            var chunks = [];
+            var size = 0;
             res.on('data', function (data) {
                 chunks.push(data);
                 size += data.length;

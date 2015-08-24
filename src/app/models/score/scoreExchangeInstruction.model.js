@@ -1,6 +1,7 @@
 'use strict';
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var ObjectId = Schema.Types.ObjectId;
 /**
  *  积分兑换规则
  * @type {*|Schema}
@@ -17,6 +18,10 @@ var scoreExchangeInstructionSchema = new Schema({
     createdTime: {
         type: Date,
         default: Date.now
+    },
+    schoolId: {
+        type: ObjectId,
+        required: true
     }
 
 });

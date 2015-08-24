@@ -10,20 +10,33 @@ var co = require('co');
 var _ = require('lodash');
 var format = require('string-template');
 var models = require('../../../models');
-
+var messageTemplate = '<xml>' +
+    '<ToUserName><![CDATA[{to}]]></ToUserName>' +
+    '<FromUserName><![CDATA[{from}]]></FromUserName>' +
+    '<CreateTime>{createTime}</CreateTime>' +
+    '<MsgType><![CDATA[text]]></MsgType>' +
+    '<Content><![CDATA[{content}]]></Content>' +
+    '</xml>';
 /**
  * 在线答疑按钮点击事件
  */
-function * qOnline(msg) {
-    var student = yield models.Student.findOne({openids: msg.ToUserName}).exec();
+var qOnline = co.wrap(function *(msg) {
 
+    return format(messageTemplate,
+        {
+            to: msg.FromUserName,
+            from: msg.ToUserName,
+            createTime: new Date().getTime(),
+            content: '在线答疑'
+        });
 
-}
-
-
-module.exports.click = co.wrap(function *(msg) {
-    var key = msg.EventKey;
-    if (key && key === 'q_online') {
-        yield *qOnline(msg);
-    }
 });
+
+module.exports = exports = {
+    click: function (msg) {
+        var key = msg.EventKey;
+        if (key && key === 'q_online') {
+            return qOnline(msg);
+        }
+    }
+};

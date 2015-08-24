@@ -28,7 +28,7 @@ queue.on('job enqueue', function (id, type) {
     });
 });
 
-// load job processes
+// load job processors
 require('./jobs')(queue);
 
 module.exports = queue;

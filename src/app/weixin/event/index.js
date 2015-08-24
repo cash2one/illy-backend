@@ -34,5 +34,5 @@ var dummy = co.wrap(function*() {
 module.exports = function (msg) {
     var event = msg.Event.toUpperCase();
     var handler = handlerMap.get(event) || dummy;
-    handler(msg);
+    return handler(msg);
 };

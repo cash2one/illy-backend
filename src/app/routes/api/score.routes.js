@@ -107,4 +107,21 @@ module.exports = function (api) {
     api.get('/score/mall', score.scoreMall);
 
 
+    /**
+     *
+     * @api {get} /api/v1/score/exchangeInstruction  积分兑换规则
+     * @apiName ExchangeInstruction
+     * @apiGroup Score
+     * @apiVersion 0.0.1
+     * @apiHeader {String} Authorization Json web token
+     * @apiPermission 认证用户
+     *
+     *
+     * @apiSuccessExample 成功响应示例
+     *     HTTP/1.1 200 OK
+     *
+     */
+    api.get('/score/exchangeInstruction', score.exchangeInstruction);
+
+
 };

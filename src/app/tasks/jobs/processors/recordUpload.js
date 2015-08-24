@@ -6,8 +6,8 @@ var co = require('co');
 var qn = require('qiniu');
 var _ = require('lodash');
 var request = require('request-promise');
-var api = require('../../weixin/api');
-var config = require('../../../config/config');
+var api = require('../../../weixin/api');
+var config = require('../../../../config/config');
 
 qn.conf.ACCESS_KEY = config.qn.accessKey;
 qn.conf.SECRET_KEY = config.qn.secretKey;
@@ -50,7 +50,7 @@ function uploadBuf(body, key, uptoken, callback) {
 }
 
 
-var uploadTask = co.wrap(function *(data) {
+var uploadTask = co.wrap(function *(data, done) {
     var key = data.key;
     var mediaId = data.mediaId;
     var ret = yield api.getMedia(mediaId);
@@ -59,35 +59,23 @@ var uploadTask = co.wrap(function *(data) {
         var msg = JSON.parse(mediaData.toString());
         if (msg.errorcode === 40001) {   //说明accessToken过期，刷新token后重试此任务
             yield api.refreshAccessToken();
-            throw(new Error('accessToken is not valid ,need try again'));
-        } else {
-            throw(new Error(msg.errmsg));
         }
+        done(new Error(msg.errmsg));
     } else {
         //上传数据
-        var p = new Promise(function (resolve, reject) {
-            uploadBuf(mediaData, key, getToken(key), function (err, res) {
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(res);
-                    console.log('upload to qn successfully');
-                }
-            });
+        uploadBuf(mediaData, key, getToken(key), function (err) {
+            if (err) {
+                done(err);
+            } else {
+                done();
+            }
         });
-        return yield p;
     }
 });
 
 
 module.exports = function (queue) {
     queue.process('qnUpload', function (job, done) {
-        uploadTask(job.data)
-            .then(function (res) {
-                done();
-            }).catch(function (err) {
-                console.error(err);
-                done(err);
-            });
+        uploadTask(job.data, done);
     });
 };

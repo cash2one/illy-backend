@@ -8,6 +8,7 @@ var jwt = require('jsonwebtoken');
 var cache = require('../../common/cache');
 var config = require('../../../config/config');
 var models = require('../../models');
+var queue = require('../../tasks');
 var Visitor = models.Visitor;
 var User = models.Student;
 var LoginLog = models.LoginLog;
@@ -19,7 +20,6 @@ var userApi = {
     profile: function *() {
         this.body = this.request.user;
     },
-
 
     /**
      * 绑定用户微信
@@ -85,13 +85,49 @@ var userApi = {
 
     },
 
-
     /**
      * 修改头像
      *
      */
     avatar: function *() {
+        var user = this.state.jwtUser;
+        var mediaId = this.request.body.avatar;
+        var key = user.schoolId + '/' + mediaId;
+        queue.create('avatarUpload', {
+            key: key,
+            mediaId: mediaId,
+            student: user._id
+        }).attempts(2).save();
+        this.body = 'ok';
+    },
 
+    /**
+     * 七牛上传成功回调
+     */
+    avatarUploaded: function *() {
+        var data = this.request.body;
+        var avatar = data.key;
+        var studentId = data.student;
+        if (!avatar || !studentId) {
+            this.body = '';
+            return;
+        }
+        this.body = yield User.update({
+            _id: studentId
+        }, {avatar: avatar}).exec();
+    },
+
+    /**
+     *
+     * 解除绑定
+     *
+     */
+    unbind: function *() {
+        var user = this.state.jwtUser;
+        var userId = user._id;
+        var openid = user.openid;
+        // 解除用户绑定
+        this.body = yield User.update({_id: userId}, {$pull: {openids: openid}}).exec();
     }
 };
 

@@ -5,6 +5,7 @@
 var models = require('../../models');
 var Student = models.Student;
 var ScoreExchange = models.ScoreExchange;
+var ScoreExchangeInstruction = models.ScoreExchangeInstruction;
 
 var scoreApi = {
 
@@ -21,6 +22,7 @@ var scoreApi = {
         }, '-createdTime -schoolId')
             .skip(offset)
             .limit(limit)
+            .sort('score')
             .lean()
             .exec();
         this.body = products || [];
@@ -33,7 +35,7 @@ var scoreApi = {
         var jwtUser = this.state.jwtUser;
         var userId = jwtUser._id;
         var schoolId = jwtUser.schoolId;
-        var student = yield Student.findById(userId, 'displayName avatar score -_id').lean().exec();
+        var student = yield Student.findById(userId, 'displayName avatar score').lean().exec();
         if (!student) {
             this.throw(400, '当前学生不存在');
         }
@@ -54,11 +56,23 @@ var scoreApi = {
         var students = yield Student.find({schoolId: schoolId, state: 0})
             .sort('-score')
             .limit(10)
-            .select('displayName username score avatar -_id')
+            .select('displayName username score avatar')
             .lean()
             .exec();
         this.body = students || [];
 
+    },
+
+    /**
+     *
+     * 积分兑换规则
+     *
+     */
+    exchangeInstruction: function *() {
+        var user = this.state.jwtUser;
+        var schoolId = user.schoolId;
+        var instruction = yield ScoreExchangeInstruction.findOne({schoolId: schoolId}).exec();
+        this.body = (instruction && instruction.content) || '';
     }
 };
 

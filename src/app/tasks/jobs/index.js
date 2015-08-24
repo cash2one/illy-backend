@@ -3,9 +3,14 @@
  */
 
 'use strict';
+
+var _ = require('lodash');
+var requireDir = require('require-dir');
+
 module.exports = function (queue) {
 
-    require('./qn')(queue);
-    require('./weixinEvent')(queue);
+    _.forEach(requireDir('./processors'), function (processor) {
+        processor(queue);
+    });
 
 };

@@ -3,9 +3,9 @@
  */
 'use strict';
 
-var cache = require('../../common/cache'),
-    co = require('co'),
-    models = require('../../models');
+var cache = require('../../../common/cache');
+var models = require('../../../models');
+var co = require('co');
 
 /**
  * 微信取消关注任务处理

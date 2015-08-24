@@ -20,7 +20,6 @@ var qnApi = {
                 yield QnGarbage.create({
                     key: key
                 });
-                console.log('save success');
             } catch (err) {
                 console.error('resource [' + key + '] format failed : ', err);
             }

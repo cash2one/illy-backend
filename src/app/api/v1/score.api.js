@@ -72,7 +72,8 @@ var scoreApi = {
         var user = this.state.jwtUser;
         var schoolId = user.schoolId;
         var instruction = yield ScoreExchangeInstruction.findOne({schoolId: schoolId}).exec();
-        this.body = (instruction && instruction.content) || '';
+        var content = (instruction && instruction.content) || '';
+        this.body = content.replace(/\n/g, '<br/>');
     }
 };
 

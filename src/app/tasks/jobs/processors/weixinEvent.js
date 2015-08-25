@@ -18,8 +18,9 @@ var unSubscribe = co.wrap(function*(data, done) {
     var Visitor = models.Visitor;
     // 解除用户绑定
     yield Student.update({openids: openid}, {$pull: {openids: openid}}).exec();
-    yield Visitor.remove({openid: openid});
-    yield cache.delete('openid:' + openid);
+    yield Visitor.remove({openid: openid}).exec();
+    yield cache.delete('token:user:' + openid);
+    yield cache.delete('token:visitor:' + openid);
     done();
 });
 

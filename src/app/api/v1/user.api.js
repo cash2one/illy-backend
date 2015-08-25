@@ -41,7 +41,7 @@ var userApi = {
         }
         yield User.update({_id: user._id}, {$addToSet: {openids: openid}}).exec();
         var token = jwt.sign({openid: openid, _id: user._id, schoolId: user.schoolId}, config.jwt.secret);
-        yield cache.set('openid:' + openid, token, 3600 * 24); //添加缓存24小时
+        yield cache.set('token:user:' + openid, token, 3600 * 24); //添加缓存24小时
         this.body = token;
 
     },
@@ -52,11 +52,17 @@ var userApi = {
      */
     auth: function *() {
         var openid = this.request.weixinToken.openid;
-        var token = yield cache.get('openid:' + openid);
+        var type = this.request.query.authType;
+        var cacheKey;
+        if (type && type === 'visitor') {
+            cacheKey = 'token:visitor:' + openid;
+        } else {
+            cacheKey = 'token:user:' + openid;
+        }
+        var token = yield cache.get(cacheKey);
         if (token) {
             this.body = token;
         } else {
-            var type = this.request.query.authType;
             var user;
             if (type && type === 'visitor') {
                 user = yield Visitor.findOne({openid: openid}, 'schoolId').exec();
@@ -68,7 +74,7 @@ var userApi = {
                 this.throw(401, openid);
             }
             token = jwt.sign({openid: openid, _id: user._id, schoolId: user.schoolId}, config.jwt.secret);
-            yield cache.set('openid:' + openid, token, 3600 * 24);
+            yield cache.set(cacheKey, token, 3600 * 24);
             this.body = token;
         }
     },
@@ -127,6 +133,7 @@ var userApi = {
         var userId = user._id;
         var openid = user.openid;
         // 解除用户绑定
+        yield cache.delete('token:user:' + openid);
         this.body = yield User.update({_id: userId}, {$pull: {openids: openid}}).exec();
     }
 };

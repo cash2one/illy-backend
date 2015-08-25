@@ -46,7 +46,7 @@ var handlers = {
         if (school) {
             var visitor = new models.Visitor({
                 schoolId: school._id,
-                openid: msg.ToUserName
+                openid: msg.FromUserName
             });
             yield visitor.save();  //保持访客信息
             return format(messageTemplate,

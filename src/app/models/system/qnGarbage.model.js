@@ -13,7 +13,7 @@ var Schema = mongoose.Schema;
 
 var garbageSchema = new Schema({
     key: String,
-    created: {
+    createdTime: {
         type: Date,
         default: Date.now
     }

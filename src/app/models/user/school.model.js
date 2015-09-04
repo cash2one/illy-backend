@@ -71,19 +71,22 @@ var schoolSchema = new Schema({
         type: String,
         required: '规模不能为空'
     },
-    //二维码url
+    //微信二维码url
     qrcode: {
         type: String
     },
+
     avatar: {
         type: String
     },
+
     // 是否可用
     state: {
         type: Number,
         enum: [0, 1], //(0:可用 1:禁用)
         default: 0
     },
+
     // 创建时间
     createdTime: {
         type: Date,

@@ -100,7 +100,6 @@ var getMedia = co.wrap(function* (mediaId) {
     var accessToken = yield getAccessToken();
     var url = `http://api.weixin.qq.com/cgi-bin/media/get?access_token=${accessToken}&media_id=${mediaId}`;
     return yield new Promise(function (resolve, reject) {
-        var content = instruct
         http.get(url, function (res) {
             var ret = {};
             var error = res.headers['content-type'] === 'text/plain';

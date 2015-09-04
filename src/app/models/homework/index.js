@@ -1,12 +1,10 @@
 /**
- *
- * Created by Frank on 15/7/25.
+ * Created by Frank on 15/9/3.
  */
-
 'use strict';
 var _ = require('lodash');
 
-module.exports = _.assign(
+module.exports = _.extend(
     require('./homework.model'),
-    require('./quizBase.model')
+    require('./quiz.model')
 );

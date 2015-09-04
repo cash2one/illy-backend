@@ -36,13 +36,14 @@ var categorySchema = new Schema({
         default: 0
     },
 
-    updated: {
+    createdTime: {
         type: Date,
         default: Date.now
     },
 
     schoolId: {
         type: ObjectId,
+        required: true,
         index: true
     }
 });

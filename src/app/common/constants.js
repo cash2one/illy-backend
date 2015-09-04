@@ -20,15 +20,6 @@ module.exports = {
     operations: {
         INCREASE: 0,
         DECREASE: 1
-    },
-
-    // 积分规则key  operation : 0 添加  1:减少
-    scoreRules: {
-        FINISH_HOMEWORK_AWARD: 0,
-        FINISH_PREVIEW_AWARD: 1,
-        FULL_SCORE_AWARD: 2,
-        SHARE_AWARD: 3,
-        TEST_INVITE_AWARD: 4
     }
 
 };

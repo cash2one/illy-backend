@@ -17,7 +17,7 @@ var visitorSchema = new Schema({
         type: ObjectId,
         required: true
     },
-    created: {
+    createdTime: {
         type: Date,
         default: Date.now
     }

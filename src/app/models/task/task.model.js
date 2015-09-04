@@ -17,17 +17,17 @@ var taskSchema = new Schema({
     taskType: {
         type: Number,
         enum: [0, 1],    // 0: 文章分享 1: 活动分享
-        require: true
+        required: true
     },
 
     item: {              // 任务具体内容ID
         type: ObjectId,
-        require: true
+        required: true
     },
 
-    state: {             // 任务状态 0: 进行中 1: 结束
+    state: {             // 任务状态  0:进行中 1: 结束 2:删除
         type: Number,
-        enum: [0, 1],
+        enum: [0, 1, 2],
         default: 0
     },
 
@@ -46,28 +46,18 @@ var taskSchema = new Schema({
         default: 0
     },
 
-    shareCount: {      // 此次任务分享人数 针对分享类任务
-        type: Number,
-        default: 0
-    },
-
-    visitCount: {     // 查看此次任务的人数
-        type: Number,
-        default: 0
-    },
-
-    created: {
+    createdTime: {
         type: Date,
         default: Date.now
     },
 
     schoolId: {
         type: ObjectId,
-        require: true
+        required: true
     }
 });
 
-taskSchema.post('remove', function (task) {
+taskSchema.pre('remove', function (task) {
     var TaskRecord = mongoose.model('TaskRecord');
     TaskRecord.remove({
         task: task
@@ -76,7 +66,15 @@ taskSchema.post('remove', function (task) {
             console.error(err);
         }
     });
+    if (task.taskType === 1) {
+        var Activity = mongoose.model('Activity');
+        Activity.remove({task: task}, function (err) {
+            if (err) console.error(err);
+        });
+    }
+
 });
+
 
 module.exports = {
     Task: mongoose.model('Task', taskSchema)

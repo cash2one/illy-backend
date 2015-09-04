@@ -1,19 +1,15 @@
 'use strict';
 /**
- * 题库模型
+ * 家庭作业模型
  * @type {*|exports|module.exports}
  */
 
 var mongoose = require('mongoose');
-var _ = require('lodash');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
 
 var exerciseSchema = new Schema({
     // 习题类型 (choice and completion)
-    _id: {
-        type: Number
-    },
     eType: {
         type: Number,
         enum: [0, 1, 2, 3] // (0: 单选 1: 图片单选  2:填空  3: 语音)
@@ -22,14 +18,17 @@ var exerciseSchema = new Schema({
     sequence: {
         type: Number
     },
+
     // 说明
     description: {
         type: String
     },
+
     // 题干
     question: {
         type: String
     },
+
     //用于选择题
     choices: [{
         title: String,
@@ -44,25 +43,25 @@ var exerciseSchema = new Schema({
     analysis: {
         type: String
     }
-});
+}, {_id: false});
 
-exerciseSchema.pre('save', function (next) {
-    // do stuff\
-    this._id = this.sequence;
-    next();
-});
 
-/**
- * 题库数据模型Schema
- * @type {Schema}
- */
 var quizSchema = new Schema({
-    // 题目名称
+
     title: {
+        type: String,
+        required: '作业标题不能为空'
+    },
+
+    // 知识重点
+    keyPoint: {
         type: String
     },
-    // 习题列表(关联习题)
-    exercises: [exerciseSchema],
+
+    //知识重点录音
+    keyPointRecord: {
+        type: String
+    },
 
     // 创建人
     creator: {
@@ -70,31 +69,35 @@ var quizSchema = new Schema({
         ref: 'Teacher',
         index: true
     },
-    creatorDisplayName: {
-        type: String
-    },
-    creatorUsername: {
-        type: String
-    },
-    tags: {
-        type: [String],
-        index: true
-    },
-    // 创建时间
+
+    //题目列表
+    exercises: [exerciseSchema],
+
     createdTime: {
         type: Date,
         default: Date.now
     },
 
+    // 是否保存题库
+    asTemplate: {
+        type: Boolean,
+        default: false
+    },
+    // 使用次数
+
     usage: {
         type: Number,
         default: 0
     },
-    // 学校id
+
     schoolId: {
         type: ObjectId,
         index: true
     }
 });
 
-module.exports = {Quiz: mongoose.model('Quiz', quizSchema)};
+
+module.exports = {
+    Quiz: mongoose.model('Quiz', quizSchema)
+};
+

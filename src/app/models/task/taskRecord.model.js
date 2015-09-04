@@ -24,7 +24,7 @@ var taskCollectSchema = new Schema({
         ref: 'Student'
     },
 
-    created: {
+    createdTime: {
         type: Date,
         default: Date.now
     },

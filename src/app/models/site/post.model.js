@@ -39,10 +39,12 @@ var postSchema = new Schema({
         type: Number,
         default: 0
     },
+
     like: {
         type: Number,
         default: 0
     },
+
     //是否轮播
     isSlide: {
         type: Number,
@@ -54,12 +56,7 @@ var postSchema = new Schema({
         type: [String]
     },
 
-    created: {
-        type: Date,
-        default: Date.now
-    },
-
-    updated: {
+    createdTime: {
         type: Date,
         default: Date.now
     },

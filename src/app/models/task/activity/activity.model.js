@@ -60,6 +60,10 @@ var activitySchema = new Schema({
         type: Number,
         default: 0
     },
+    createdTime: {
+        type: Date,
+        default: Date.now
+    },
     schoolId: {
         type: ObjectId,
         require: true

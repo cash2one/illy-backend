@@ -5,8 +5,6 @@
 'use strict';
 var _ = require('lodash');
 var math = require('mathjs');
-var ruleKeys = require('../../common/constants').scoreRules;
-var systemScoreRules = require('../../common/systemScoreRules');
 var queue = require('../../tasks');
 var models = require('../../models');
 var Student = models.Student;
@@ -19,12 +17,12 @@ var homeworkApi = {
      * 获取未做的作业列表
      */
     todoList: function*() {
-        var jwtUser = this.state.jwtUser;
-        var userId = jwtUser._id;
-        var schoolId = jwtUser.schoolId;
+        var user = this.state.jwtUser;
+        var userId = user._id;
+        var schoolId = user.schoolId;
         var offset = this.request.query.offset || 0;
         var limit = this.request.query.limit || 10;
-        var homeworkList = yield Homework.find({
+        this.body = yield Homework.find({
             schoolId: schoolId,
             state: 0,
             performances: {
@@ -33,18 +31,11 @@ var homeworkApi = {
                     state: 0
                 }
             }
-        }).select('title startTime endTime performances.state')
+        }).select('-performances')
             .skip(offset)
             .limit(limit)
             .lean()
             .exec();
-        _.forEach(homeworkList, function (homework) {
-            homework.finishedCount = _.filter(homework.performances, function (performance) {
-                return performance.state !== 0;
-            }).length;
-        });
-        this.body = homeworkList;
-
     },
 
     /**
@@ -52,12 +43,11 @@ var homeworkApi = {
      *
      */
     mistakeList: function *() {
-        var jwtUser = this.state.jwtUser,
-            userId = jwtUser._id,
-            schoolId = jwtUser.schoolId,
-            offset = this.request.query.offset || 0,
-            limit = this.request.query.limit || 10;
-
+        var jwtUser = this.state.jwtUser;
+        var userId = jwtUser._id;
+        var schoolId = jwtUser.schoolId;
+        var offset = this.request.query.offset || 0;
+        var limit = this.request.query.limit || 10;
         var homeworkList = yield Homework.find({
             schoolId: schoolId,
             performances: {
@@ -73,16 +63,18 @@ var homeworkApi = {
             .limit(limit)
             .lean()
             .exec();
+
         _.forEach(homeworkList, function (homework) {
-            homework.wrongNumber = homework.performances[0].wrongCollect.length;
-            homework.finishedTime = homework.performances[0].finishedTime;
+            var performance = homework.performances[0];
+            homework.wrongNumber = performance.wrongCollect.length;
+            homework.finishedTime = performance.finishedTime;
         });
         this.body = homeworkList;
 
     },
 
     /**
-     * 错题集
+     * 错题详情
      */
     mistakeDetail: function *() {
         var jwtUser = this.state.jwtUser,
@@ -90,18 +82,19 @@ var homeworkApi = {
             homeworkId = this.params.homeworkId;
         var homework = yield   Homework.findOne({_id: homeworkId},
             {performances: {$elemMatch: {student: userId}}})
-            .select('title exercises')
+            .select('title quiz')
+            .populate('quiz', 'exercises')
             .lean().exec();
-        var performance = homework.performances[0],
-            exercises = homework.exercises,
-            wrongExercises = [];
+        var performance = homework.performances[0];
+        var exercises = homework.quiz.exercises;
+        var wrongExercises = [];
         if (performance) {
             performance.homework = homework.title;
             var wrongCollect = performance.wrongCollect;
             // 标记错题
             if (!_.isEmpty(wrongCollect)) {
                 _.forEach(wrongCollect, function (wrong) {
-                    var exercise = exercises[wrong.exerciseId - 1];
+                    var exercise = exercises[wrong.sequence - 1];
                     exercise.wrongAnswer = wrong.answer;
                     wrongExercises.push(exercise);
                 });
@@ -114,12 +107,11 @@ var homeworkApi = {
      * 评语列表
      */
     commonList: function *() {
-        var jwtUser = this.state.jwtUser,
-            userId = jwtUser._id,
-            schoolId = jwtUser.schoolId,
-            offset = this.request.query.offset || 0,
-            limit = this.request.query.limit || 10;
-
+        var jwtUser = this.state.jwtUser;
+        var userId = jwtUser._id;
+        var schoolId = jwtUser.schoolId;
+        var offset = this.request.query.offset || 0;
+        var limit = this.request.query.limit || 10;
         var homeworkList = yield Homework.find({
             schoolId: schoolId,
             performances: {
@@ -129,15 +121,17 @@ var homeworkApi = {
                 }
             }
         }, {performances: {$elemMatch: {student: userId}}})
-            .select('title')
+            .select('title createdTime creator')
             .skip(offset)
             .limit(limit)
             .lean()
             .exec();
+
         _.forEach(homeworkList, function (homework) {
             homework.comment = homework.performances[0].comment;
             delete homework.performances;
         });
+
         this.body = homeworkList;
     },
 
@@ -149,7 +143,10 @@ var homeworkApi = {
      */
     read: function*() {
         var homework = yield Homework.findById(this.params.id)
-            .select('title exercises keyPoint keyPointRecord').lean().exec();
+            .select('title quiz keyPoint keyPointRecord')
+            .populate('quiz', 'exercises')
+            .lean()
+            .exec();
         if (!homework || homework.state === 1) {
             this.throw(400, '作业不存在或者已经结束');
         }
@@ -177,6 +174,18 @@ var homeworkApi = {
             }).attempts(2).save();
             audioAnswer.answer = key + '.mp3';
         });
+
+        var homework = yield Homework.findOne({_id: homeworkId},
+            {performances: {$elemMatch: {student: studentId}}})
+            .lean()
+            .exec();
+        if (!homework || homework.state !== 0 || homework.performances.length === 0) {
+            this.throw(400, '作业不存在或者已经结束');
+        }
+        var performance = homework.performances[0];
+        if (performance.state !== 0) {
+            this.throw(400, '作业已经提交');
+        }
         // 提交成绩
         yield Homework.update({_id: homeworkId, 'performances.student': studentId}, {
             $set: {
@@ -186,32 +195,31 @@ var homeworkApi = {
                     finishedTime: new Date(),
                     state: 1
                 })
+            },
+            $inc: {
+                statistic: {
+                    studentCountOfFinished: 1
+                }
             }
         }).exec();
-        // 获取学校积分奖励规则
-        var rules = yield SchoolScoreRule.find({schoolId: jwtUser.schoolId}, 'key value -_id').exec();
-        var rulesMap = new Map();
-        _.forEach(rules, function (rule) {
-            rulesMap.set(rule.key, rule.value);
-        });
-        var rightAward = rulesMap.get(ruleKeys.FULL_SCORE_AWARD) ||
-                systemScoreRules[ruleKeys.FULL_SCORE_AWARD].value,
-            finishedAward = rulesMap.get(ruleKeys.FINISH_HOMEWORK_AWARD) ||
-                systemScoreRules[ruleKeys.FINISH_HOMEWORK_AWARD].value,
-            factor = rightCount / numOfExercise;
-        if (factor < 1) {
-            rightAward = math.round(factor * rightAward);
-        }
-        var totalAward = rightAward + finishedAward;
 
+        var finishAward = homework.finishAward;
+        var performanceAward = homework.performanceAward;
+        var factor = rightCount / numOfExercise;
+        if (factor < 1) {
+            performanceAward = math.round(factor * performanceAward);
+        }
+        var totalAward = finishAward + performanceAward;
         // 奖励积分
-        var student = yield Student.findByIdAndUpdate(studentId,
-            {$inc: {score: totalAward, finishedHomeworkCount: 1}},
-            {new: true}).exec();
+        var student = yield Student.findByIdAndUpdate(studentId, {
+            $inc: {
+                score: totalAward,
+                finishedHomeworkCount: 1
+            }
+        }, {new: true}).exec();
+
         this.body = {
-            rightAward: rightAward,
             totalAward: totalAward,
-            finishedAward: finishedAward,
             rightCount: rightCount,
             wrongCount: wrongCount,
             totalScore: student.score

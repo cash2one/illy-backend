@@ -6,25 +6,29 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
 
-var activityCollectSchema = new Schema({
+var lotteryCollectSchema = new Schema({
 
-    activity: {
+    lottery: {
         type: ObjectId,
-        ref: 'Activity',
+        ref: 'Lottery',
         index: true
     },
 
-    name: String,
+    name: {
+        type: String,
+        required: true
+    },
 
-    phone: String,
+    phone: {
+        type: String,
+        required: true
+    },
 
-    others: [{
-        key: String,
-        value: String,
-        _id: false
-    }],
+    award: {
+        type: String
+    },
 
-    created: {
+    createdTime: {
         type: Date,
         default: Date.now
     },
@@ -37,5 +41,5 @@ var activityCollectSchema = new Schema({
 });
 
 module.exports = {
-    ActivityCollect: mongoose.model('ActivityCollect', activityCollectSchema)
+    LotteryCollect: mongoose.model('LotteryCollect', lotteryCollectSchema)
 };

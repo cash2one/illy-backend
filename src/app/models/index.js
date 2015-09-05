@@ -13,6 +13,5 @@ module.exports = _.assign(
     require('./task'),
     require('./user'),
     require('./system'),
-    require('./class.model'),
-    require('./loginLog.model')
+    require('./class.model')
 );

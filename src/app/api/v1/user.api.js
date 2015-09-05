@@ -134,7 +134,8 @@ var userApi = {
         var openid = user.openid;
         // 解除用户绑定
         yield cache.delete('token:user:' + openid);
-        this.body = yield User.update({_id: userId}, {$pull: {openids: openid}}).exec();
+        yield User.update({_id: userId}, {$pull: {openids: openid}}).exec();
+        this.body = openid;
     }
 };
 

@@ -20,12 +20,12 @@ require('./config/koa')(app);
 
 // Start server
 app.listen(config.port, config.ip, function () {
-    console.log('Koa server listening on %d, in %s mode', config.port, config.env);
+    console.log('Koa server listening on %d, in %s mode', config.port, process.env.NODE_ENV);
 });
 
 // Expose app
 exports = module.exports = app;
-
+pm2
 // Print runtime env info
 console.log('--');
 console.log(chalk.green(config.app.title + ' application started'));

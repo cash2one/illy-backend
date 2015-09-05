@@ -14,6 +14,7 @@ var exerciseSchema = new Schema({
         type: Number,
         enum: [0, 1, 2, 3] // (0: 单选 1: 图片单选  2:填空  3: 语音)
     },
+
     // 序号
     sequence: {
         type: Number
@@ -53,15 +54,6 @@ var quizSchema = new Schema({
         required: '作业标题不能为空'
     },
 
-    // 知识重点
-    keyPoint: {
-        type: String
-    },
-
-    //知识重点录音
-    keyPointRecord: {
-        type: String
-    },
 
     // 创建人
     creator: {
@@ -81,7 +73,7 @@ var quizSchema = new Schema({
     // 是否保存题库
     asTemplate: {
         type: Boolean,
-        default: false
+        default: true
     },
     // 使用次数
 

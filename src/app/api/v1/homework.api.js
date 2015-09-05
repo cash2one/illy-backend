@@ -177,6 +177,7 @@ var homeworkApi = {
 
         var homework = yield Homework.findOne({_id: homeworkId},
             {performances: {$elemMatch: {student: studentId}}})
+            .select('state finishAward performanceAward')
             .lean()
             .exec();
         if (!homework || homework.state !== 0 || homework.performances.length === 0) {
@@ -186,30 +187,30 @@ var homeworkApi = {
         if (performance.state !== 0) {
             this.throw(400, '作业已经提交');
         }
+
+        var finishAward = homework.finishAward;
+        var performanceAward = homework.performanceAward;
+        var factor = rightCount / numOfExercise;
+        if (factor < 1) {
+            performanceAward = math.floor(factor * performanceAward);
+        }
+        var totalAward = finishAward + performanceAward;
         // 提交成绩
         yield Homework.update({_id: homeworkId, 'performances.student': studentId}, {
             $set: {
                 'performances.$': _.assign(postData, {
                     student: studentId,
+                    award: totalAward,
                     spendSeconds: spendSeconds,
                     finishedTime: new Date(),
                     state: 1
                 })
             },
             $inc: {
-                statistic: {
-                    studentCountOfFinished: 1
-                }
+                'statistics.studentCountOfFinished': 1
             }
         }).exec();
 
-        var finishAward = homework.finishAward;
-        var performanceAward = homework.performanceAward;
-        var factor = rightCount / numOfExercise;
-        if (factor < 1) {
-            performanceAward = math.round(factor * performanceAward);
-        }
-        var totalAward = finishAward + performanceAward;
         // 奖励积分
         var student = yield Student.findByIdAndUpdate(studentId, {
             $inc: {

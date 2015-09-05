@@ -7,7 +7,6 @@ var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
 
 var performanceSchema = new Schema({
-
     student: {
         type: ObjectId,
         ref: 'Student'
@@ -21,17 +20,19 @@ var performanceSchema = new Schema({
     // 错误答案
     wrongCollect: [{
         sequence: Number,
-        answer: String
+        answer: String,
+        _id: false
     }],
 
     // 录音题答案
     audioAnswers: [{
         sequence: Number,
-        answer: String
+        answer: String,
+        _id: false
     }],
 
     // 奖励积分数
-    score: {
+    award: {
         type: Number,
         default: 0
     },
@@ -45,6 +46,10 @@ var performanceSchema = new Schema({
         content: {
             type: String
         }
+    },
+
+    finishedTime: {
+        type: Date
     },
 
     // 状态
@@ -64,11 +69,6 @@ var homeworkSchema = new Schema({
         type: ObjectId,
         ref: 'Quiz',
         required: true
-    },
-
-    // 练习标题
-    quizTitle: {
-        type: String
     },
 
     // 知识重点
@@ -91,6 +91,11 @@ var homeworkSchema = new Schema({
     performanceAward: {
         type: Number,
         default: 0
+    },
+
+    // 作业名称
+    title: {
+        type: String
     },
 
     //练习题目数量

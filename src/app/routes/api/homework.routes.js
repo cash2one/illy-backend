@@ -16,8 +16,8 @@ module.exports = function (api) {
      * @apiParam {Number} offset=0 数据查询偏移数量 (用于分页)
      * @apiSuccess {Object[]} response 返回的response数据
      * @apiSuccess {String} response._id 作业ID
-     * @apiSuccess {Date} response.title 开始时间
-     * @apiSuccess {Date} response.startTime 结束时间
+     * @apiSuccess {String} response.title 作业标题
+     * @apiSuccess {Date} response.createdTime 创建时间
      * @apiSuccess {Number} response.finishedCount  完成人数
      *
      * @apiSuccessExample 成功响应示例
@@ -25,15 +25,13 @@ module.exports = function (api) {
      *     [{
    *       "_id" : "xxx",
    *       "title": "新概念作业第一章",
-   *       "startTime":"标准GMT时间",
-   *       "endTime":"标准GMT时间",
+   *       "createdTime":"标准GMT时间",
    *       "finishedCount": 10
    *     },
      *     {
    *       "_id" : "xxx",
    *       "title": "新概念作业第二章",
-   *       "startTime":"标准GMT时间",
-   *       "endTime":"标准GMT时间",
+   *       "createdTime":"标准GMT时间",
    *       "finishedCount" : 0
    *     }]
      *
@@ -52,16 +50,16 @@ module.exports = function (api) {
      * @apiSuccess {String} title 作业标题
      * @apiSuccess {String} keyPoint 知识重点
      * @apiSuccess {String} keyPointRecord 知识重点录音URL
-     * @apiSuccess {Object[]} exercises 题目列表
-     * @apiSuccess {Number} exercises.sequence 题目序号
-     * @apiSuccess {Number} exercises.eType 题目类型 (0:文字选择  1:图片选择 2:填空题 3:录音题)
-     * @apiSuccess {String} exercises.question 题干
-     * @apiSuccess {String} exercises.description 题目说明
-     * @apiSuccess {Object[]} exercises.choices 选项列表 (只有选择题有该字段)
-     * @apiSuccess {String} exercises.choices.title 选项标题 (例如 A B C D )
-     * @apiSuccess {String} exercises.choices.content 选项内容
-     * @apiSuccess {String} exercises.answer 答案
-     * @apiSuccess {String} exercises.analysis 答案解析(可选)
+     * @apiSuccess {Object[]} quiz.exercises 题目列表
+     * @apiSuccess {Number} quiz.exercises.sequence 题目序号
+     * @apiSuccess {Number} quiz.exercises.eType 题目类型 (0:文字选择  1:图片选择 2:填空题 3:录音题)
+     * @apiSuccess {String} quiz.exercises.question 题干
+     * @apiSuccess {String} quiz.exercises.description 题目说明
+     * @apiSuccess {Object[]} quiz.exercises.choices 选项列表 (只有选择题有该字段)
+     * @apiSuccess {String} quiz.exercises.choices.title 选项标题 (例如 A B C D )
+     * @apiSuccess {String} quiz.exercises.choices.content 选项内容
+     * @apiSuccess {String} quiz.exercises.answer 答案
+     * @apiSuccess {String} quiz.exercises.analysis 答案解析(可选)
      *
      *
      *
@@ -84,11 +82,9 @@ module.exports = function (api) {
      * @apiParam{String} wrongCollect.answer  错误答案
      * @apiParam{Number} spendSeconds 花费秒数
      * @apiParam{Object[]} audioAnswers 录音答案
-     * @apiParam{Number} audioAnswers.exerciseId 题目序号
+     * @apiParam{Number} audioAnswers.sequence 题目序号
      * @apiParam{String} audioAnswers.answer  录音url
      *
-     * @apiSuccess {Number} rightAward 本次正确奖励分数
-     * @apiSuccess {Number} finishedAward 本次完成奖励分数
      * @apiSuccess {Number} totalAward 本次奖励积分数量
      * @apiSuccess {Number} rightCount 正确题目数量
      * @apiSuccess {Number} wrongCount 错误题目数量

@@ -1,8 +1,8 @@
 'use strict';
-var mongoose = require('mongoose');
-var roles = require('../../common/constants').roles;
-var Schema = mongoose.Schema;
-var ObjectId = Schema.Types.ObjectId;
+var mongoose = require('mongoose'),
+    roles = require('../../common/constants').roles,
+    Schema = mongoose.Schema,
+    ObjectId = Schema.Types.ObjectId;
 
 /**
  * 学生数据模型Schema
@@ -31,7 +31,8 @@ var studentSchema = new Schema({
     // 性别
     gender: {
         type: String,
-        trim: true
+        trim: true,
+        enum: ['男', '女']
         //enum: ['男', '女'] //(0:女 1:男)
     },
 
@@ -47,12 +48,14 @@ var studentSchema = new Schema({
     // 联系方式
     phone: {
         type: String,
-        trim: true
+        trim: true,
+        default: ''
     },
     // 家长
     parent: {
         type: String,
-        trim: true
+        trim: true,
+        default: ''
 
     },
     // 积分
@@ -60,12 +63,15 @@ var studentSchema = new Schema({
         type: Number,
         default: 0
     },
+
     // 就读公办学校
     onSchool: {
-        type: String
+        type: String,
+        default: ''
     },
     grade: {
-        type: String
+        type: String,
+        default: ''
     },
     //备注
     remark: {
@@ -82,10 +88,6 @@ var studentSchema = new Schema({
         type: Number,
         enum: [0, 1], //(0:可用 1:禁用 2:无班级)
         default: 0
-    },
-    openids: {
-        type: [String],
-        index: true
     },
     // 完成作业数量
     finishedHomeworkCount: {

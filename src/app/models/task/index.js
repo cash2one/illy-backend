@@ -6,7 +6,6 @@ var _ = require('lodash');
 
 module.exports = _.extend(
     require('./activity'),
-    require('./lottery'),
     require('./task.model'),
     require('./taskRecord.model')
 );

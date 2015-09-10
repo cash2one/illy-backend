@@ -7,7 +7,7 @@
 
 var _ = require('lodash');
 
-module.exports = _.assign(
+module.exports = _.extend(
     require('./media.model'),
     require('./mediaGroup.model')
 );

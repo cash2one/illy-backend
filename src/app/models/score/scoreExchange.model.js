@@ -1,7 +1,7 @@
 'use strict';
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var ObjectId = Schema.Types.ObjectId;
+var mongoose = require('mongoose'),
+    Schema = mongoose.Schema,
+    ObjectId = Schema.Types.ObjectId;
 
 
 /**
@@ -12,24 +12,24 @@ var scoreExchangeSchema = new Schema({
     // 商品名称
     productName: {
         type: String,
-        required: '商品名称不能为空'
+        required: true
     },
     // 商品图片
     imageKey: {
         type: String,
-        required: '图片不能为空'
+        required: true
 
     },
-    // 花费积分
+    // 兑换积分
     score: {
         type: Number,
-        required: '积分不能为空'
+        required: true
 
     },
     // 库存
     stock: {
         type: Number,
-        required: '库存不能为空'
+        required: true
 
     },
     // 兑换次数
@@ -45,7 +45,7 @@ var scoreExchangeSchema = new Schema({
 
     schoolId: {
         type: ObjectId,
-        required: '学校ID不能为空',
+        required: true,
         index: true
     }
 

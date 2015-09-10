@@ -7,14 +7,18 @@ var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
 
 var performanceSchema = new Schema({
+
+    // 学生
     student: {
         type: ObjectId,
-        ref: 'Student'
+        ref: 'Student',
+        required: true
     },
 
     // 花费秒数
     spendSeconds: {
-        type: Number
+        type: Number,
+        default: 0
     },
 
     // 错误答案
@@ -30,6 +34,7 @@ var performanceSchema = new Schema({
         answer: String,
         _id: false
     }],
+
 
     // 奖励积分数
     award: {
@@ -71,6 +76,12 @@ var homeworkSchema = new Schema({
         required: true
     },
 
+    // 作业标题
+    title: {
+        type: String,
+        required: true
+    },
+
     // 知识重点
     keyPoint: {
         type: String
@@ -91,11 +102,6 @@ var homeworkSchema = new Schema({
     performanceAward: {
         type: Number,
         default: 0
-    },
-
-    // 作业名称
-    title: {
-        type: String
     },
 
     //练习题目数量
@@ -120,19 +126,16 @@ var homeworkSchema = new Schema({
     statistics: {
         // 做此次作业的学生数量
         studentCount: Number,
-
         // 完成此次作业的学生数量
         studentCountOfFinished: {
             type: Number,
             default: 0
         },
-
         // 平均完成时间
         averageSpendSeconds: {
             type: Number,
             default: 0
         },
-
         // 完成率
         finishRate: {
             type: Number,
@@ -154,9 +157,9 @@ var homeworkSchema = new Schema({
         type: ObjectId,
         required: true
     }
-
 });
 
+homeworkSchema.index({clazz: 1, state: 1});
 module.exports = {
     Homework: mongoose.model('Homework', homeworkSchema)
 };

@@ -15,12 +15,12 @@ var taskCollectSchema = new Schema({
     task: {
         type: ObjectId,
         ref: 'Task',
-        require: true
+        required: true
     },
 
     student: {
         type: ObjectId,
-        require: true,
+        required: true,
         ref: 'Student'
     },
 
@@ -31,10 +31,12 @@ var taskCollectSchema = new Schema({
 
     schoolId: {
         type: ObjectId,
-        require: true
+        required: true
     }
 
 });
+
+taskCollectSchema.index({student: 1, task: 1});
 
 module.exports = {
     TaskRecord: mongoose.model('TaskRecord', taskCollectSchema)

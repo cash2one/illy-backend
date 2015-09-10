@@ -57,6 +57,8 @@ var taskSchema = new Schema({
     }
 });
 
+taskSchema.index({schoolId: 1, state: 1});
+
 taskSchema.pre('remove', function (task) {
     var TaskRecord = mongoose.model('TaskRecord');
     TaskRecord.remove({
@@ -72,7 +74,6 @@ taskSchema.pre('remove', function (task) {
             if (err) console.error(err);
         });
     }
-
 });
 
 

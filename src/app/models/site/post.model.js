@@ -9,23 +9,28 @@ var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
 
 var postSchema = new Schema({
-
     // 标题
     title: {
-        type: String
+        type: String,
+        required: true
     },
+
     image: {
-        type: String
+        type: String,
+        required: true
     },
     // 内容
     content: {
-        type: String
+        type: String,
+        required: true
     },
 
     // 对应分类
     category: {
         type: ObjectId,
-        ref: 'Category'
+        required: true,
+        ref: 'Category',
+        index: true
     },
 
     // 访问量
@@ -51,10 +56,6 @@ var postSchema = new Schema({
         enums: [0, 1], //0 否  1 是
         default: 0
     },
-    // 标签
-    tags: {
-        type: [String]
-    },
 
     createdTime: {
         type: Date,
@@ -63,6 +64,7 @@ var postSchema = new Schema({
 
     schoolId: {
         type: ObjectId,
+        required: true,
         index: true
     }
 

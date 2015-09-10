@@ -2,10 +2,10 @@
  * Created by Frank on 14/11/20.
  */
 'use strict';
-var mongoose = require('mongoose');
-var roles = require('../../common/constants').roles;
-var Schema = mongoose.Schema;
-var ObjectId = Schema.Types.ObjectId;
+var mongoose = require('mongoose'),
+    roles = require('../../common/constants').roles,
+    Schema = mongoose.Schema,
+    ObjectId = Schema.Types.ObjectId;
 
 var teacherSchema = new Schema({
     // 用户名,用户登陆系统所用的名字
@@ -26,6 +26,14 @@ var teacherSchema = new Schema({
     displayName: {
         type: String,
         trim: true
+    },
+    // 微信号
+    weixin: {
+        type: String
+    },
+    // 二维码
+    qrcode: {
+        type: String
     },
     // 头像
     avatar: {

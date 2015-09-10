@@ -3,13 +3,13 @@
  */
 
 'use strict';
-var heapdump = require('heapdump');
+
 
 // Set default node environment to development
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-var config = require('./config/config'),
-    chalk = require('chalk');
+var config = require('./config/config');
+var chalk = require('chalk');
 
 // connect to mongodb
 require('./db/mongo');
@@ -20,7 +20,7 @@ require('./config/koa')(app);
 
 // Start server
 app.listen(config.port, config.ip, function () {
-    console.log('Koa server listening on %d, in %s mode', config.port, process.env.NODE_ENV);
+    console.log('Server listening on %d, in %s mode', config.port, process.env.NODE_ENV);
 });
 
 // Expose app

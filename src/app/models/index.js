@@ -5,13 +5,15 @@
 'use strict';
 var _ = require('lodash');
 
-module.exports = _.assign(
+module.exports = _.extend(
     require('./homework'),
     require('./media'),
     require('./score'),
     require('./site'),
     require('./task'),
     require('./user'),
-    require('./system'),
-    require('./class.model')
+    require('./schedule.model'),
+    require('./class.model'),
+    require('./communicationRecord.model'),
+    require('./counter.model')
 );

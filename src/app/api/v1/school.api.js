@@ -12,6 +12,9 @@ var schoolApi = {
         var jwtUser = this.state.jwtUser;
         var schoolId = jwtUser.schoolId;
         var school = yield  School.findById(schoolId, 'schoolName').lean().exec();
+        if (!school) {
+            this.throw(404, '学校不存在');
+        }
         var studentCount = yield Student.count({
             schoolId: schoolId,
             state: 0

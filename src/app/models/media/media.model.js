@@ -9,7 +9,8 @@ var mediaSchema = new Schema({
     // 媒体名称
     name: {
         type: String,
-        trim: true
+        trim: true,
+        required: true
     },
     // 媒体类型
     mType: {
@@ -23,9 +24,10 @@ var mediaSchema = new Schema({
         type: ObjectId,
         index: true
     },
-    // oss资源 key
+    // 七牛资源 key
     key: {
-        type: String
+        type: String,
+        required: true
     },
     // 状态
     state: {
@@ -33,31 +35,21 @@ var mediaSchema = new Schema({
         enums: [0, 1, 2],  // 0 正常使用  1 假删除  2 可永久删除
         default: 0
     },
-    // 标签
-    tags: {
-        type: [String],
-        index: true
-    },
 
     // 创建时间
-    created: {
-        type: Date,
-        default: Date.now
-    },
-
-    updated: {
+    createdTime: {
         type: Date,
         default: Date.now
     },
 
     schoolId: {
         type: ObjectId,
-        index: true
+        required: true
     }
 
 });
 
-
+mediaSchema.index({schoolId: 1, group: 1});
 module.exports = {
     Media: mongoose.model('Media', mediaSchema)
 };

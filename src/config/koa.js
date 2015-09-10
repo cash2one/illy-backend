@@ -11,13 +11,20 @@ var jwt = require('koa-jwt');
 var bodyParser = require('koa-bodyparser');
 var xmlParser = require('../app/weixin/xmlParser');
 var config = require('./config');
-var logger = require('./logger');
 var receiverProxy = require('../app/weixin/proxy');
 
 module.exports = function (app) {
 
     //loading data models
     require('../app/models');
+
+    //for slb heath check
+    app.use(function*(next) {
+        if (this.request.url === '/ping') {
+            return this.body = 'ok';
+        }
+        yield next;
+    });
 
     //parser xml request body
     app.use(xmlParser());
@@ -49,7 +56,6 @@ module.exports = function (app) {
                 console.log('Response: ', this.body);
             }
         } catch (err) {
-            console.error('Error:' + err.status, err);
             switch (err.status) {
                 case 401:
                     this.status = 401;

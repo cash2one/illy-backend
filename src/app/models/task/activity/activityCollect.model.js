@@ -37,7 +37,7 @@ var activityCollectSchema = new Schema({
 
     schoolId: {
         type: ObjectId,
-        index: true
+        required: true
     }
 
 

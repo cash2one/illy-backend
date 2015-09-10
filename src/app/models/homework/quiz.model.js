@@ -51,15 +51,21 @@ var quizSchema = new Schema({
 
     title: {
         type: String,
-        required: '作业标题不能为空'
+        required: true
     },
-
 
     // 创建人
     creator: {
         type: ObjectId,
-        ref: 'Teacher',
-        index: true
+        ref: 'Teacher'
+    },
+
+    creatorDisplayName: {
+        type: String
+    },
+
+    creatorUsername: {
+        type: String
     },
 
     //题目列表
@@ -70,13 +76,13 @@ var quizSchema = new Schema({
         default: Date.now
     },
 
-    // 是否保存题库
+    // 是否保存在题库中
     asTemplate: {
         type: Boolean,
         default: true
     },
-    // 使用次数
 
+    // 使用次数
     usage: {
         type: Number,
         default: 0
@@ -84,10 +90,11 @@ var quizSchema = new Schema({
 
     schoolId: {
         type: ObjectId,
-        index: true
+        required: true
     }
 });
 
+quizSchema.index({schoolId: 1, asTemplate: 1});
 
 module.exports = {
     Quiz: mongoose.model('Quiz', quizSchema)

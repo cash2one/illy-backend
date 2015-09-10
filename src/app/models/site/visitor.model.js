@@ -15,8 +15,10 @@ var visitorSchema = new Schema({
     },
     schoolId: {
         type: ObjectId,
-        required: true
+        required: true,
+        index: true
     },
+
     createdTime: {
         type: Date,
         default: Date.now

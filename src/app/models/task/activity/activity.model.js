@@ -11,32 +11,32 @@ var activitySchema = new Schema({
 
     theme: {          // 活动主题
         type: String,
-        require: true
+        required: true
     },
 
     startTime: {      // 开始时间
         type: Date,
-        require: true
+        required: true
     },
 
     endTime: {        // 结束时间
         type: Date,
-        require: true
+        required: true
     },
 
     deadline: {       // 截至日期
         type: Date,
-        require: true
+        required: true
     },
 
     address: {        // 活动地点
         type: String,
-        require: true
+        required: true
     },
 
     content: {        // 活动详情
         type: String,
-        require: true
+        required: true
     },
 
     limit: {          // 限制人数
@@ -66,7 +66,7 @@ var activitySchema = new Schema({
     },
     schoolId: {
         type: ObjectId,
-        require: true
+        required: true
     }
 
 });

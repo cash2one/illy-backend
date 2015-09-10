@@ -61,6 +61,7 @@ var homeworkApi = {
             .select('title')
             .skip(offset)
             .limit(limit)
+            .sort('-createdTime')
             .lean()
             .exec();
 
@@ -123,6 +124,7 @@ var homeworkApi = {
         }, {performances: {$elemMatch: {student: userId}}})
             .select('title createdTime creator')
             .skip(offset)
+            .sort('-createdTime')
             .limit(limit)
             .lean()
             .exec();

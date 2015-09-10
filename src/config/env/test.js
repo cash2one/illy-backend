@@ -20,7 +20,13 @@ module.exports = {
 
     jwt: {
         secret: 'lovekuando',
-        key: 'jwtUser'
+        key: 'jwls' +
+        'tUser'
+    },
+
+    redis: {
+        host: '127.0.0.1',
+        port: 6379
     },
 
     weixin: {

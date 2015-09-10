@@ -25,7 +25,8 @@ var taskApi = {
         this.body = yield Task
             .where('schoolId', schoolId)
             .where('state', 0)
-            .where('_id').nin(records).exec();
+            .where('_id').nin(records).sort('-createdTime')
+            .exec();
     },
 
     /**

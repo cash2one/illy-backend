@@ -11,7 +11,6 @@ var models = require('../../models');
 var queue = require('../../tasks');
 var Visitor = models.Visitor;
 var User = models.Student;
-var LoginLog = models.LoginLog;
 
 var userApi = {
     /**

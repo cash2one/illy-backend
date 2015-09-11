@@ -89,6 +89,8 @@ var studentSchema = new Schema({
         enum: [0, 1], //(0:可用 1:禁用 2:无班级)
         default: 0
     },
+    openids: [String],
+
     // 完成作业数量
     finishedHomeworkCount: {
         type: Number,
@@ -124,6 +126,7 @@ studentSchema.methods.isDisabled = function () {
 };
 
 studentSchema.index({schoolId: 1, state: 1});
+studentSchema.index({openids: 1});
 studentSchema.index({classes: 1});
 module.exports = {
     Student: mongoose.model('Student', studentSchema)

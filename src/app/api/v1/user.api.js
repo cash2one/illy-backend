@@ -58,6 +58,7 @@ var userApi = {
         } else {
             cacheKey = 'token:user:' + openid;
         }
+        // TODO 添加超时机制
         var token = yield cache.get(cacheKey);
         if (token) {
             this.body = token;

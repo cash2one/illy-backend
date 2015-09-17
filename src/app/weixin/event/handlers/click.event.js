@@ -25,7 +25,7 @@ var qOnline = co.wrap(function *(msg) {
             <Content><![CDATA[${content}]]></Content>
         </xml>`;
 
-    return replay('在线答疑')
+    return replay('即将开通')
 
 });
 

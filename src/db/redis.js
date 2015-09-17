@@ -2,14 +2,16 @@
 /**
  * Module dependencies.
  */
-
 var config = require('../config/config');
 
+var Redis = require('ioredis'),
+    redisConfig = config.redis;
 
-var Redis = require('ioredis');
-
-
-var redisClient = new Redis(config.redis);
+var redisClient = new Redis({
+    host: redisConfig.host,
+    port: redisConfig.port,
+    password: redisConfig.options.auth_pass
+});
 
 
 redisClient.on('error', function (err) {
@@ -23,5 +25,6 @@ redisClient.on('connect', function () {
 redisClient.on('closed', function () {
     console.warn('redis has closed');
 });
+
 
 module.exports = redisClient;

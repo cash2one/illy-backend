@@ -56,6 +56,7 @@ module.exports = function (app) {
                 console.log('Response: ', this.body);
             }
         } catch (err) {
+            console.error(err);
             switch (err.status) {
                 case 401:
                     this.status = 401;

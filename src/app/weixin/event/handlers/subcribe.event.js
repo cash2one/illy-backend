@@ -2,26 +2,14 @@
  * Created by Frank on 15/7/6.
  */
 
-/**
- * 处理关注和取关事件
- */
-
-
 'use strict';
+
 var co = require('co');
 var _ = require('lodash');
-var format = require('string-template');
 var models = require('../../../models');
 var queue = require('../../../tasks');
-var messageTemplate = '<xml>' +
-    '<ToUserName><![CDATA[{to}]]></ToUserName>' +
-    '<FromUserName><![CDATA[{from}]]></FromUserName>' +
-    '<CreateTime>{createTime}</CreateTime>' +
-    '<MsgType><![CDATA[text]]></MsgType>' +
-    '<Content><![CDATA[{content}]]></Content>' +
-    '</xml>';
-
 var handlers = {
+
     /**
      *
      * 处理关注事件
@@ -29,34 +17,32 @@ var handlers = {
      *
      */
     subscribe: co.wrap(function *(msg) {
-        var eventKey = msg.EventKey;
-        if (!eventKey) {
-            return format(messageTemplate,
-                {
-                    to: msg.FromUserName,
-                    from: msg.ToUserName,
-                    createTime: new Date().getTime(),
-                    content: '欢迎加入家校云'
-                });
+        const DEFAULT_MESSAGE = '欢迎加入家校云';
+        let replayTo = msg.FromUserName;
+        let replayFrom = msg.ToUserName;
+        let createTime = new Date().getTime();
+        let replay = content => `<xml>
+            <ToUserName><![CDATA[${replayTo}]]></ToUserName>
+            <FromUserName><![CDATA[${replayFrom}]]></FromUserName>
+            <CreateTime>${createTime}</CreateTime>
+            <MsgType><![CDATA[text]]></MsgType>
+            <Content><![CDATA[${content}]]></Content>
+        </xml>`;
+
+        var scene = msg.EventKey && msg.EventKey.split('_');
+        if (!scene || scene.length <= 1) {
+            return replay(DEFAULT_MESSAGE);
         }
-        var scene = eventKey.split('_')[1];
-        //说明是关注学校场景值二维码
-        var School = models.School;
-        var school = yield School.findOne({username: scene}, '_id schoolName').lean().exec();
-        if (school) {
-            var visitor = new models.Visitor({
-                schoolId: school._id,
-                openid: msg.FromUserName
-            });
-            yield visitor.save();  //保持访客信息
-            return format(messageTemplate,
-                {
-                    to: msg.FromUserName,
-                    from: msg.ToUserName,
-                    createTime: new Date().getTime(),
-                    content: '欢迎加入 [' + school.schoolName + ']' + '家校云。'
-                });
+        var school = yield models.School.findOne({username: scene[1]}, '_id schoolName').lean().exec();
+        if (!school) {
+            return replay(DEFAULT_MESSAGE);
         }
+        yield models.Visitor.findOneAndUpdate({
+            schoolId: school._id,
+            openid: replayTo
+        }, {createdTime: Date.now()}, {upsert: true}).exec();
+
+        return replay('欢迎加入 [' + school.schoolName + ']' + '家校云。');
     }),
 
     /**

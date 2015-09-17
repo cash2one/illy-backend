@@ -20,8 +20,7 @@ module.exports = {
 
     jwt: {
         secret: 'lovekuando',
-        key: 'jwls' +
-        'tUser'
+        key: 'jwtUser'
     },
 
     redis: {

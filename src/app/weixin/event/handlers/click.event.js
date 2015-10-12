@@ -9,23 +9,24 @@
 var co = require('co');
 var _ = require('lodash');
 var models = require('../../../models');
+var api = require('../../api');
 
 /**
  * 在线答疑按钮点击事件
  */
 var qOnline = co.wrap(function *(msg) {
     let replayTo = msg.FromUserName;
-    let replayFrom = msg.ToUserName;
-    let createTime = new Date().getTime();
-    let replay = content => `<xml>
-            <ToUserName><![CDATA[${replayTo}]]></ToUserName>
-            <FromUserName><![CDATA[${replayFrom}]]></FromUserName>
-            <CreateTime>${createTime}</CreateTime>
-            <MsgType><![CDATA[text]]></MsgType>
-            <Content><![CDATA[${content}]]></Content>
-        </xml>`;
-
-    return replay('即将开通')
+    //let replayFrom = msg.ToUserName;
+    //let createTime = new Date().getTime();
+    //let replay = content => `<xml>
+    //        <ToUserName><![CDATA[${replayTo}]]></ToUserName>
+    //        <FromUserName><![CDATA[${replayFrom}]]></FromUserName>
+    //        <CreateTime>${createTime}</CreateTime>
+    //        <MsgType><![CDATA[text]]></MsgType>
+    //        <Content><![CDATA[${content}]]></Content>
+    //    </xml>`;
+    api.sendMessage(replayTo, '即将开通');
+    //return replay('即将开通')
 
 });
 

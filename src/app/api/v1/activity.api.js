@@ -15,7 +15,7 @@ var api = {
      *
      */
     readActivity: function *() {
-        this.body = yield Activity.findByIdAndUpdate(this.params.activityId, {$inc: {visitCount: 1}}, {new: true}).exec();
+        this.body = yield Activity.findByIdAndUpdate(this.params.activityId, {$inc: {visitCount: 1}}, {'new': true}).exec();
     },
 
     /**

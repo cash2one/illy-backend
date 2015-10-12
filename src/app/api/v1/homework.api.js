@@ -34,6 +34,7 @@ var homeworkApi = {
         }).select('-performances')
             .skip(offset)
             .limit(limit)
+            .sort('-createdTime')
             .lean()
             .exec();
     },
@@ -219,7 +220,7 @@ var homeworkApi = {
                 score: totalAward,
                 finishedHomeworkCount: 1
             }
-        }, {new: true}).exec();
+        }, {'new': true}).exec();
 
         this.body = {
             totalAward: totalAward,

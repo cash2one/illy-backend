@@ -3,8 +3,8 @@
  * Created by Frank on 15/7/6.
  */
 
-var sdk = require('../../api/v1/sdk.api'),
-    auth = require('../../middleware/auth');
+var sdk = require('../../api/v1/sdk.api');
+var auth = require('../../middleware/auth');
 module.exports = function (api) {
     /**
      * @api {get} /api/v1/public/sdk/signature sdk页面签名
@@ -28,7 +28,7 @@ module.exports = function (api) {
    *  }
      *
      */
-    api.get('/public/sdk/signature', sdk.getSign);
+    api.get('/public/sdk/signature', auth.getTicket, sdk.getSign);
 
     api.get('/public/sdk/generateBinary', sdk.generateBinary);
 };

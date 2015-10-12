@@ -4,9 +4,7 @@
 
 'use strict';
 var QnGarbage = require('../../models').QnGarbage;
-
 var qnApi = {
-
     /**
      * qn format convert callback
      */
@@ -28,7 +26,6 @@ var qnApi = {
         }
     }
 };
-
 
 module.exports = qnApi;
 

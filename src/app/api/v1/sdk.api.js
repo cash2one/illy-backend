@@ -4,7 +4,6 @@
 'use strict';
 var _ = require('lodash');
 var sign = require('../../weixin/sdk/sign');
-var weixin = require('../../weixin/api');
 
 
 var sdkApi = {
@@ -12,7 +11,7 @@ var sdkApi = {
      * 获取签名
      */
     getSign: function*() {
-        var ticket = yield weixin.getTicket();
+        var ticket = this.request.ticket;
         var url = this.request.query.url;
         if (!url) {
             this.throw(400);

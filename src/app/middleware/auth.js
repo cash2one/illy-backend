@@ -3,12 +3,11 @@
  */
 'use strict';
 var jwt = require('jsonwebtoken');
-var api = require('../weixin/api');
+var token = require('../weixin/token');
 var config = require('../../config/config');
 var cache = require('../common/cache');
 var User = require('../models').Student;
 var ACCESS_TOKEN_KEY = 'accessToken:kuando';
-
 
 var middleWare = {
 
@@ -17,15 +16,14 @@ var middleWare = {
      * @param next
      */
     getOpenidToken: function*(next) {
-        var code = this.request.query.code || this.request.body.code;
-        if (!code) {
-            this.throw(400, '微信验证码不能为空');
+        let code = this.request.query.code || this.request.body.code;
+        try {
+            let token = yield token.getOpenidToken(code);
+            this.request.openid = token.openid;
         }
-        var res = yield api.getOpenidToken(code);
-        if (res.errcode) {
-            this.throw(400, res.errmsg);
+        catch (err) {
+            this.throw(400, err);
         }
-        this.request.weixinToken = res;
         yield next;
     },
 
@@ -35,7 +33,11 @@ var middleWare = {
      * @param next
      */
     getAccessToken: function*(next) {
-        this.request.accessToken = yield api.getAccessToken;
+        try {
+            this.request.accessToken = yield token.getAccessToken();
+        } catch (err) {
+            this.throw(400, err);
+        }
         yield next;
     },
 
@@ -44,7 +46,11 @@ var middleWare = {
      * @param next
      */
     getTicket: function*(next) {
-        this.request.ticket = yield api.getTicket;
+        try {
+            this.request.ticket = yield token.getTicket();
+        } catch (err) {
+            this.throw(400, err);
+        }
         yield next;
     },
 

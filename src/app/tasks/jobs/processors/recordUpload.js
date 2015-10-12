@@ -6,11 +6,13 @@ var co = require('co');
 var qn = require('qiniu');
 var _ = require('lodash');
 var request = require('request-promise');
-var api = require('../../../weixin/api');
+var api = require('../../../weixin/token');
 var config = require('../../../../config/config');
 
 qn.conf.ACCESS_KEY = config.qn.accessKey;
 qn.conf.SECRET_KEY = config.qn.secretKey;
+
+var client = qn.rs.Client();
 
 //七牛mps队列
 var mps = ['q1amr2mp3', 'q2amr2mp3', 'q3amr2mp3', 'q4amr2mp3'];
@@ -30,7 +32,7 @@ function getToken(key) {
     var putPolicy = new qn.rs.PutPolicy2({
         scope: bucket,
         persistentOps: 'avthumb/mp3|saveas/' + pfoKey,
-        persistentNotifyUrl: 'http://api.hizuoye.com/api/v1/public/qn/persistentNotify',
+        persistentNotifyUrl: config.apiBaseUrl + '/api/v1/public/qn/persistentNotify',
         persistentPipeline: mps[_.random(0, 3)]
     });
     return putPolicy.token();
@@ -71,6 +73,14 @@ var uploadTask = co.wrap(function *(data, done) {
             }
         });
     }
+});
+
+var doTask = co.wrap(function *(data, done) {
+    var key = data.key;
+    var mediaId = data.mediaId;
+    var accessToken = yield token.getAccessToken();
+    var url = `http://api.weixin.qq.com/cgi-bin/media/get?access_token=${accessToken}&media_id=${mediaId}`;
+
 });
 
 

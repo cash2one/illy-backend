@@ -50,7 +50,7 @@ var userApi = {
      * 验证用户是否绑定微信
      */
     auth: function *() {
-        var openid = this.request.weixinToken.openid;
+        var openid = this.request.openid;
         var type = this.request.query.authType;
         var cacheKey;
         if (type && type === 'visitor') {

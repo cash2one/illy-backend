@@ -12,8 +12,6 @@ var config = require('../../../../config/config');
 qn.conf.ACCESS_KEY = config.qn.accessKey;
 qn.conf.SECRET_KEY = config.qn.secretKey;
 
-var client = qn.rs.Client();
-
 //七牛mps队列
 var mps = ['q1amr2mp3', 'q2amr2mp3', 'q3amr2mp3', 'q4amr2mp3'];
 /**
@@ -73,14 +71,6 @@ var uploadTask = co.wrap(function *(data, done) {
             }
         });
     }
-});
-
-var doTask = co.wrap(function *(data, done) {
-    var key = data.key;
-    var mediaId = data.mediaId;
-    var accessToken = yield token.getAccessToken();
-    var url = `http://api.weixin.qq.com/cgi-bin/media/get?access_token=${accessToken}&media_id=${mediaId}`;
-
 });
 
 

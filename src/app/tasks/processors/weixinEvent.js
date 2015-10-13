@@ -3,8 +3,8 @@
  */
 'use strict';
 
-var cache = require('../../../common/cache');
-var models = require('../../../models');
+var cache = require('../../common/cache');
+var models = require('../../models');
 var co = require('co');
 
 /**

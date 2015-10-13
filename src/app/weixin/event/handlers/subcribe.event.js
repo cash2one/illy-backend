@@ -7,7 +7,8 @@
 var co = require('co');
 var _ = require('lodash');
 var models = require('../../../models');
-var queue = require('../../../tasks');
+var Job = require('../../../tasks/job');
+
 var handlers = {
 
     /**
@@ -53,10 +54,10 @@ var handlers = {
      */
     unSubscribe: co.wrap(function* (msg) {
         //将任务添加至任务队列中
-        queue.create('unSubscribe', {openid: msg.FromUserName}).save();
+        let job = new Job('unSubscribe', {openid: msg.FromUserName});
+        job.save();
         return '';
     })
-
 };
 
 module.exports = exports = handlers;

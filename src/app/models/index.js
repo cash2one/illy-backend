@@ -15,5 +15,6 @@ module.exports = _.extend(
     require('./schedule.model'),
     require('./class.model'),
     require('./communicationRecord.model'),
-    require('./counter.model')
+    require('./counter.model'),
+    require('./question.model')
 );

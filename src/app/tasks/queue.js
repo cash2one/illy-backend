@@ -4,9 +4,11 @@
  */
 'use strict';
 
-var kue = require('kue'),
-    redis = require('redis'),
-    config = require('../../config/config');
+var kue = require('kue');
+var _ = require('lodash');
+var redis = require('redis');
+var config = require('../../config/config');
+var requireDir = require('require-dir');
 
 var queue = kue.createQueue({
     redis: {
@@ -15,6 +17,7 @@ var queue = kue.createQueue({
         }
     }
 });
+
 
 queue.on('job enqueue', function (id, type) {
     console.log('Job %s got queued of type %s', id, type);
@@ -29,6 +32,9 @@ queue.on('job enqueue', function (id, type) {
 });
 
 // load job processors
-require('./jobs')(queue);
+_.forEach(requireDir('./processors'), function (processor) {
+    processor(queue);
+});
 
 module.exports = queue;
+

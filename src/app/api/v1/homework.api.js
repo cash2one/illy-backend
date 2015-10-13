@@ -5,7 +5,7 @@
 'use strict';
 var _ = require('lodash');
 var math = require('mathjs');
-var queue = require('../../tasks');
+var Job = require('../../tasks/job');
 var models = require('../../models');
 var Student = models.Student;
 var Homework = models.Homework;
@@ -170,12 +170,12 @@ var homeworkApi = {
         var spendSeconds = postData.spendSeconds;
         var rightCount = numOfExercise - wrongCount;
         _.forEach(postData.audioAnswers, function (audioAnswer) {
-            var key = jwtUser.schoolId + '/' + audioAnswer.answer;
-            queue.create('qnUpload', {
-                key: key,
-                mediaId: audioAnswer.answer
-            }).attempts(2).save();
-            audioAnswer.answer = key + '.mp3';
+            let key = jwtUser.schoolId + '/' + audioAnswer.answer;
+            let job = new Job('fetchMedia', {mediaId: audioAnswer.answer});
+            job.attempts(2, true).complete(function (data) {
+                new Job('convertToMp3', {key: key}).save();
+            }).save();
+            audioAnswer.answer = key;
         });
 
         var homework = yield Homework.findOne({_id: homeworkId},

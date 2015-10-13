@@ -31,7 +31,7 @@ var homeworkApi = {
                     state: 0
                 }
             }
-        }).select('title createdTime finishedCount')
+        }).select('title createdTime finishAward performanceAward')
             .skip(offset)
             .limit(limit)
             .sort('-createdTime')

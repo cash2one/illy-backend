@@ -14,7 +14,6 @@ var config = require('./config');
 var receiverProxy = require('../app/weixin/proxy');
 
 module.exports = function (app) {
-
     //loading data models
     require('../app/models');
 
@@ -25,9 +24,6 @@ module.exports = function (app) {
         }
         yield next;
     });
-
-    //parser xml request body
-    app.use(xmlParser());
 
     //handle weixin event and msg
     app.use(receiverProxy());
@@ -40,43 +36,23 @@ module.exports = function (app) {
         'Access-Control-Max-Age': 1728000
     }));
 
-    // error handler
     app.use(function *(next) {
-        try {
-            if (config.debug) {
-                console.log(this.request.method + ':', this.request.url);
-                if (this.request.method === 'GET') {
-                    console.log('Request:', this.request.query);
-                } else {
-                    console.log('Request: ', this.request.body);
-                }
-            }
-            yield next;
-            if (config.debug) {
-                console.log('Response: ', this.body);
-            }
-        } catch (err) {
-            console.error(err);
-            switch (err.status) {
-                case 401:
-                    this.status = 401;
-                    this.body = err.message;
-                    break;
-                case 400:
-                    this.status = 400;
-                    this.body = {error: err.message};
-                    break;
-                case 404:
-                    this.status = 404;
-                    this.body = {
-                        info: 'illy api',
-                        docUrl: config.docUrl
-                    };
-                    break;
-                default :
-                    throw err;
+        if (config.debug) {
+            console.log(this.request.method + ':', this.request.url);
+            if (this.request.method === 'GET') {
+                console.log('Request:', this.request.query);
+            } else {
+                console.log('Request: ', this.request.body);
             }
         }
+        yield next;
+        if (config.debug) {
+            console.log('Response: ', this.body);
+        }
+    });
+
+    app.on('error', function (err) {
+        console.error(err);
     });
 
     // jwt token
@@ -84,10 +60,5 @@ module.exports = function (app) {
 
     //loading routes
     require('../app/routes')(app);
-
-    // handler 404
-    app.use(function *() {
-        this.throw(404, 'Resource Not Found');
-    });
 
 };

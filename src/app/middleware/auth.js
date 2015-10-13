@@ -3,7 +3,7 @@
  */
 'use strict';
 var jwt = require('jsonwebtoken');
-var token = require('../weixin/token');
+var tokenService = require('../weixin/token');
 var config = require('../../config/config');
 var cache = require('../common/cache');
 var User = require('../models').Student;
@@ -18,7 +18,7 @@ var middleWare = {
     getOpenidToken: function*(next) {
         let code = this.request.query.code || this.request.body.code;
         try {
-            let token = yield token.getOpenidToken(code);
+            let token = yield tokenService.getAuthToken(code);
             this.request.openid = token.openid;
         }
         catch (err) {
@@ -34,7 +34,7 @@ var middleWare = {
      */
     getAccessToken: function*(next) {
         try {
-            this.request.accessToken = yield token.getAccessToken();
+            this.request.accessToken = yield tokenService.getAccessToken();
         } catch (err) {
             this.throw(400, err);
         }
@@ -47,7 +47,7 @@ var middleWare = {
      */
     getTicket: function*(next) {
         try {
-            this.request.ticket = yield token.getTicket();
+            this.request.ticket = yield tokenService.getTicket();
         } catch (err) {
             this.throw(400, err);
         }

@@ -20,7 +20,7 @@ var convertToMp3 = co.wrap(function*(data, done) {
         if (data.notifyURL) {
             options.notifyURL = data.notifyURL;
         }
-        yield toThunk(data.key, 'avthumb/mp3', options);
+        yield toThunk(data.key, 'avthumb/mp3|saves' + pfoKey, options);
         done();
     } catch (err) {
         done(err);

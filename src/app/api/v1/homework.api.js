@@ -175,7 +175,7 @@ var homeworkApi = {
             job.attempts(2, true).complete(function () {
                 new Job('convertToMp3', {key: key}).save();
             }).save();
-            audioAnswer.answer = key;
+            audioAnswer.answer = key + '.mp3';
         });
 
         var homework = yield Homework.findOne({_id: homeworkId},

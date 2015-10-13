@@ -15,7 +15,7 @@ qiniu.conf.bucket = config.bucket;
 
 
 module.exports = {
-
+    config: config,
     /**
      * 抓取资源
      * @param url
@@ -46,7 +46,8 @@ module.exports = {
         opts.pipeline = mps[mpsTimes % (mps.length - 1)];
         mpsTimes = mpsTimes > 1000 ? 0 : mpsTimes + 1;
         qiniu.fop.pfop(config.bucket, key, fops, opts, cb);
-    }
+    },
+    util: qiniu.util
 };
 
 

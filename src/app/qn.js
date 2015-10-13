@@ -14,8 +14,8 @@ var config = {
 qn.conf.ACCESS_KEY = config.accessKey;
 qn.conf.SECRET_KEY = config.secretKey;
 qn.conf.bucket = config.bucket;
-var pfoKey = qn.util.urlsafeBase64Encode(qn.conf.bucket + ':'+'xxx.mp3');
-qn.fop.pfop(qn.conf.bucket, '55f14bba4985931622f8b578/UEmK8guKfqIStPVVEke9OD5vsX3bUrLoVO1XhrkhKkYJwGJ6eFvlXmgUBisFpREy', 'avthumb/mp3|saveas'+pfoKey, {},
+var pfoKey = qn.util.urlsafeBase64Encode(qn.conf.bucket + ':' + '55f14bba4985931622f8b578/UEmK8guKfqIStPVVEke9OD5vsX3bUrLoVO1XhrkhKkYJwGJ6eFvlXmgUBisFpREy');
+qn.fop.pfop(qn.conf.bucket, '55f14bba4985931622f8b578/UEmK8guKfqIStPVVEke9OD5vsX3bUrLoVO1XhrkhKkYJwGJ6eFvlXmgUBisFpREy', 'avthumb/mp3|saveas/' + pfoKey, {},
     function (err, res) {
         console.log(err, res);
     });

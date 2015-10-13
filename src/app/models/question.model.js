@@ -12,7 +12,8 @@ var questionSchema = new Schema({
 
     student: {
         type: ObjectId,
-        ref: 'Student'
+        ref: 'Student',
+        required: true
     },
 
     questionImage: {
@@ -28,17 +29,23 @@ var questionSchema = new Schema({
         default: 0
     },
 
-    reply: {
+    answer: {
         type: String
     },
 
-    replyer: {
+    teacher: {
         type: ObjectId,
         ref: 'Teacher'
     },
 
+    createdTime: {
+        type: Date,
+        default: Date.now
+    },
+
     schoolId: {
-        type: ObjectId
+        type: ObjectId,
+        required: true
     }
 
 });

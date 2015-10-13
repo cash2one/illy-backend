@@ -17,6 +17,7 @@ function registerHandler(handlerModule) {
 }
 
 _.forEach(requireDir('./handlers'), function (handlerModule) {
+
     registerHandler(handlerModule);
 });
 

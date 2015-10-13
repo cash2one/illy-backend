@@ -171,8 +171,8 @@ var homeworkApi = {
         var rightCount = numOfExercise - wrongCount;
         _.forEach(postData.audioAnswers, function (audioAnswer) {
             let key = jwtUser.schoolId + '/' + audioAnswer.answer;
-            let job = new Job('fetchMedia', {mediaId: audioAnswer.answer});
-            job.attempts(2, true).complete(function (data) {
+            let job = new Job('fetchMedia', {mediaId: audioAnswer.answer, key: key});
+            job.attempts(2, true).complete(function () {
                 new Job('convertToMp3', {key: key}).save();
             }).save();
             audioAnswer.answer = key;

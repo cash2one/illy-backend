@@ -7,7 +7,8 @@ var queue = require('./queue');
 function Job(name, data) {
     this.name = name;
     this.data = data;
-    this.save = false;
+    this.job = queue.create(this.name, this.data).save();
+    this.isSave = false;
 }
 
 Job.prototype = {
@@ -27,15 +28,14 @@ Job.prototype = {
     },
 
     attempts: function (times, backoff) {
-        job.attempts(times).backoff(backoff);
+        this.job.attempts(times).backoff(backoff);
         return this;
     },
 
     save: function () {
-        if (this.save) return this;
-        queue.create(this.name, this.data).save();
-        this.save = true;
-        console.log('create job ', this.name);
+        if (this.isSave) return this;
+        this.job.save();
+        this.isSave = true;
         return this;
     }
 };

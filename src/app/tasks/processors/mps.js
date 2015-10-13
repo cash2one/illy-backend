@@ -20,7 +20,8 @@ var convertToMp3 = co.wrap(function*(data, done) {
         if (data.notifyURL) {
             options.notifyURL = data.notifyURL;
         }
-        yield toThunk(data.key, 'avthumb/mp3|saves' + pfoKey, options);
+        var pfoKey = qn.util.urlsafeBase64Encode(qn.config.bucket + ':' + data.key + '.mp3');
+        yield toThunk(data.key, 'avthumb/mp3|saveas/' + pfoKey, options);
         done();
     } catch (err) {
         done(err);

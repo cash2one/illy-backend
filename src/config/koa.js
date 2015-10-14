@@ -12,6 +12,7 @@ var bodyParser = require('koa-bodyparser');
 var xmlParser = require('../app/weixin/xmlParser');
 var config = require('./config');
 var receiverProxy = require('../app/weixin/proxy');
+var logger = require('../app/middleware/logger');
 
 module.exports = function (app) {
     //loading data models
@@ -36,20 +37,9 @@ module.exports = function (app) {
         'Access-Control-Max-Age': 1728000
     }));
 
-    app.use(function *(next) {
-        if (config.debug) {
-            console.log(this.request.method + ':', this.request.url);
-            if (this.request.method === 'GET') {
-                console.log('Request:', this.request.query);
-            } else {
-                console.log('Request: ', this.request.body);
-            }
-        }
-        yield next;
-        if (config.debug) {
-            console.log('Response: ', this.body);
-        }
-    });
+    if (config.debug) {
+        app.use(logger.debug);
+    }
 
     app.on('error', function (err) {
         console.error(err);

@@ -9,6 +9,9 @@ var Job = require('../../tasks/job');
 var Question = models.Question;
 
 var questionApi = {
+    /**
+     * 创建新提问
+     */
     create: function *() {
         let user = this.state.jwtUser;
         let question = new Question(this.request.body);
@@ -17,26 +20,34 @@ var questionApi = {
         // 如果有图片创建任务去抓取图片到七牛上
         if (question.questionImage) {
             let mediaId = question.questionImage;
-            let job = new Job('fetchMedia', {mediaId: mediaId, key: user.schoolId + '/' + mediaId});
+            let key = user.schoolId + '/' + mediaId;
+            let job = new Job('fetchMedia', {mediaId: mediaId, key: key});
+            question.questionImage = key;
             job.save();
         }
         this.body = yield question.save();
     },
 
+    /**
+     * 列出当前学生的提问
+     */
     list: function *() {
         let user = this.state.jwtUser;
-        let query = this.request.query;
-        let offset = query.offset || 0;
-        let limit = query.limit || 10;
-        let state = query.state;
-        this.body = yield Question.find({
-            student: user._id,
-            state: state
-        }).select('questionImage questionText createdTime')
-            .sort('-createdTime')
-            .limit(limit).skip(offset).lean().exec();
+        let offset = this.query.offset || 0;
+        let limit = this.query.limit || 10;
+        let state = parseInt(this.query.state);
+        let query = Question.find({student: user._id});
+        if (!isNaN(state)) {
+            query.where('state', state);
+        }
+        query.select('questionImage questionText createdTime')
+            .sort('-createdTime').limit(limit).skip(offset);
+        this.body = yield query.lean().exec();
     },
 
+    /**
+     * 读取提问详情
+     */
     read: function *() {
         let questionId = this.params.questionId;
         this.body = yield Question.findById(questionId).populate('teacher', 'displayName').lean().exec();

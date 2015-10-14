@@ -6,6 +6,7 @@
 var _ = require('lodash');
 var math = require('mathjs');
 var Job = require('../../tasks/job');
+var qn = require('../../qiniu');
 var models = require('../../models');
 var Student = models.Student;
 var Homework = models.Homework;
@@ -161,22 +162,30 @@ var homeworkApi = {
      *
      */
     addPerformance: function*() {
-        var jwtUser = this.state.jwtUser;
-        var homeworkId = this.params.id;
-        var postData = this.request.body;
-        var studentId = jwtUser._id;
-        var numOfExercise = postData.numOfExercise;
-        var wrongCount = postData.wrongCollect ? postData.wrongCollect.length : 0;
-        var spendSeconds = postData.spendSeconds;
-        var rightCount = numOfExercise - wrongCount;
-        _.forEach(postData.audioAnswers, function (audioAnswer) {
+        let jwtUser = this.state.jwtUser;
+        let homeworkId = this.params.id;
+        let postData = this.request.body;
+        let studentId = jwtUser._id;
+        let numOfExercise = postData.numOfExercise;
+        let wrongCount = postData.wrongCollect ? postData.wrongCollect.length : 0;
+        let spendSeconds = postData.spendSeconds;
+        let rightCount = numOfExercise - wrongCount;
+        let fetches = [];
+        let keys = [];
+        _.forEach(postData.audioAnswers, audioAnswer=> {
+            let mediaId = audioAnswer.answer;
             let key = jwtUser.schoolId + '/' + audioAnswer.answer;
-            let job = new Job('fetchMedia', {mediaId: audioAnswer.answer, key: key});
-            job.attempts(2, true).complete(function () {
-                new Job('convertToMp3', {key: key}).save();
-            }).save();
+            keys.push(key);
+            fetches.push(qn.fetchFromWeixin(mediaId, key));
             audioAnswer.answer = key + '.mp3';
         });
+        try {
+            yield fetches;
+        } catch (err) {
+            console.error(err);
+            this.throw(400, '语音题上传失败');
+        }
+        _.forEach(keys, key => new Job('convertToMp3', {key: key}).save());
 
         var homework = yield Homework.findOne({_id: homeworkId},
             {performances: {$elemMatch: {student: studentId}}})
@@ -190,7 +199,6 @@ var homeworkApi = {
         if (performance.state !== 0) {
             this.throw(400, '作业已经提交');
         }
-
         var finishAward = homework.finishAward;
         var performanceAward = homework.performanceAward;
         var factor = rightCount / numOfExercise;

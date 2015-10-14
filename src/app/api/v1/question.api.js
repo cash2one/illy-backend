@@ -2,10 +2,9 @@
  * Created by Frank on 15/10/12.
  */
 'use strict';
-
 var _ = require('lodash');
 var models = require('../../models');
-var Job = require('../../tasks/job');
+var qn = require('../../qiniu');
 var Question = models.Question;
 
 var questionApi = {
@@ -17,13 +16,19 @@ var questionApi = {
         let question = new Question(this.request.body);
         question.student = user._id;
         question.schoolId = user.schoolId;
+        if (!question.questionImage && !question.questionText) {
+            this.throw(400, '没有提问的内容');
+        }
         // 如果有图片创建任务去抓取图片到七牛上
         if (question.questionImage) {
             let mediaId = question.questionImage;
             let key = user.schoolId + '/' + mediaId;
-            let job = new Job('fetchMedia', {mediaId: mediaId, key: key});
             question.questionImage = key;
-            job.save();
+            try {
+                yield qn.fetchFromWeixin(mediaId, key);
+            } catch (err) {
+                this.throw(400, '上传图片失败');
+            }
         }
         this.body = yield question.save();
     },

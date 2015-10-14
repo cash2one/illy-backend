@@ -7,13 +7,6 @@ var co = require('co');
 var qn = require('../../qiniu');
 
 
-//thunk 包装函数，便于co调用
-var toThunk = function (key, fops, options) {
-    return callback => {
-        qn.pfop(key, fops, options, callback);
-    };
-};
-
 var convertToMp3 = co.wrap(function*(data, done) {
     try {
         let options = {};
@@ -21,7 +14,7 @@ var convertToMp3 = co.wrap(function*(data, done) {
             options.notifyURL = data.notifyURL;
         }
         var pfoKey = qn.util.urlsafeBase64Encode(qn.config.bucket + ':' + data.key + '.mp3');
-        yield toThunk(data.key, 'avthumb/mp3|saveas/' + pfoKey, options);
+        yield qn.pfop(data.key, 'avthumb/mp3|saveas/' + pfoKey, options);
         done();
     } catch (err) {
         done(err);

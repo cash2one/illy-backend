@@ -5,13 +5,10 @@
 'use strict';
 
 var cors = require('koa-cors');
-var _ = require('lodash');
-var morgan = require('koa-morgan');
 var jwt = require('koa-jwt');
 var bodyParser = require('koa-bodyparser');
-var xmlParser = require('../app/weixin/xmlParser');
 var config = require('./config');
-var receiverProxy = require('../app/weixin/proxy');
+var weixinProxy = require('../app/weixin/proxy');
 var logger = require('../app/middleware/logger');
 
 module.exports = function (app) {
@@ -27,7 +24,7 @@ module.exports = function (app) {
     });
 
     //handle weixin event and msg
-    app.use(receiverProxy());
+    app.use(weixinProxy());
 
     app.use(bodyParser());
 

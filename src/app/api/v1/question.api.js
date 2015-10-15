@@ -56,7 +56,13 @@ var questionApi = {
     read: function *() {
         let questionId = this.params.questionId;
         this.body = yield Question.findById(questionId).populate('teacher', 'displayName').lean().exec();
+    },
+
+    remove: function *() {
+        let questionId = this.params.questionId;
+        this.body = yield Question.remove({_id: questionId}).exec();
     }
+
 
 };
 

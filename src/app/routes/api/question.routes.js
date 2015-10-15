@@ -59,4 +59,16 @@ module.exports = function (api) {
      */
     api.get('/questions/:questionId', question.read);
 
+
+    /**
+     * @api {delete} /api/v1/questions/:questionId 删除问题
+     * @apiName  ReadQuestion
+     * @apiGroup Question
+     * @apiVersion 0.0.1
+     * @apiPermission 认证用户
+     *
+     *
+     */
+    api.delete('/questions/:questionId', question.remove);
+
 };

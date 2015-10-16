@@ -62,7 +62,7 @@ module.exports = function (api) {
 
     /**
      * @api {delete} /api/v1/questions/:questionId 删除问题
-     * @apiName  ReadQuestion
+     * @apiName  DeleteQuestion
      * @apiGroup Question
      * @apiVersion 0.0.1
      * @apiPermission 认证用户

@@ -4,6 +4,7 @@
  */
 'use strict';
 var auth = require('../../middleware/auth');
+var weixin = require('../../middleware/weixin');
 var user = require('../../api/v1/user.api');
 
 module.exports = function (api) {
@@ -89,7 +90,7 @@ module.exports = function (api) {
      *     xxxxxx
      *
      */
-    api.get('/public/auth', auth.getOpenidToken, user.auth);
+    api.get('/public/auth', weixin.getOpenidToken, user.auth);
 
 
     /**
@@ -132,9 +133,6 @@ module.exports = function (api) {
      *
      */
     api.put('/avatar', user.avatar);
-
-
-    api.post('/public/qn/avatarUploaded', user.avatarUploaded);
 
 
 };

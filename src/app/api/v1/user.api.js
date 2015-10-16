@@ -8,7 +8,7 @@ var jwt = require('jsonwebtoken');
 var cache = require('../../common/cache');
 var config = require('../../../config/config');
 var models = require('../../models');
-var queue = require('../../tasks');
+var qn = require('../../qiniu');
 var Visitor = models.Visitor;
 var User = models.Student;
 
@@ -71,7 +71,7 @@ var userApi = {
                 user = yield User.findOne({openids: openid}, 'schoolId').exec();
             }
             if (!user) {
-                this.throw(401, openid);
+                this.throw(401, 'User not found : openid [ ' + openid + ' ]');
             }
             token = jwt.sign({openid: openid, _id: user._id, schoolId: user.schoolId}, config.jwt.secret);
             yield cache.set(cacheKey, token, 3600 * 24);
@@ -96,33 +96,14 @@ var userApi = {
      *
      */
     avatar: function *() {
-        var user = this.state.jwtUser;
-        var mediaId = this.request.body.avatar;
-        var key = user.schoolId + '/' + mediaId;
-        queue.create('avatarUpload', {
-            key: key,
-            mediaId: mediaId,
-            student: user._id
-        }).attempts(2).save();
-        this.body = 'ok';
-    },
-
-    /**
-     * 七牛上传成功回调
-     */
-    avatarUploaded: function *() {
-        var data = this.request.body;
-        var avatar = data.key;
-        var studentId = data.student;
-        if (!avatar || !studentId) {
-            this.body = '';
-            return;
-        }
+        let user = this.state.jwtUser;
+        let mediaId = this.request.body.avatar;
+        let key = user.schoolId + '/' + mediaId;
+        yield qn.fetchFromWeixin(mediaId, key);
         this.body = yield User.update({
-            _id: studentId
-        }, {avatar: avatar}).exec();
+            _id: user
+        }, {avatar: key}).exec();
     },
-
     /**
      *
      * 解除绑定

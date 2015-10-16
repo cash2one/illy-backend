@@ -5,6 +5,7 @@
 
 var sdk = require('../../api/v1/sdk.api');
 var weixin = require('../../middleware/weixin');
+
 module.exports = function (api) {
     /**
      * @api {get} /api/v1/public/sdk/signature sdk页面签名
@@ -30,5 +31,4 @@ module.exports = function (api) {
      */
     api.get('/public/sdk/signature', weixin.getTicket, sdk.getSign);
 
-    api.get('/public/sdk/generateBinary', sdk.generateBinary);
 };

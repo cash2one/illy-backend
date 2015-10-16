@@ -8,17 +8,10 @@ var qn = require('../../qiniu');
 
 
 var convertToMp3 = co.wrap(function*(data, done) {
-    try {
-        let options = {};
-        if (data.notifyURL) {
-            options.notifyURL = data.notifyURL;
-        }
-        var pfoKey = qn.util.urlsafeBase64Encode(qn.config.bucket + ':' + data.key + '.mp3');
-        yield qn.pfop(data.key, 'avthumb/mp3|saveas/' + pfoKey, options);
-        done();
-    } catch (err) {
-        done(err);
-    }
+    let options = data.options || {};
+    let pfoKey = qn.util.urlsafeBase64Encode(qn.config.bucket + ':' + data.key + '.mp3');
+    yield qn.pfop(data.key, 'avthumb/mp3|saveas/' + pfoKey, options);
+    done();
 });
 
 module.exports = function (queue) {

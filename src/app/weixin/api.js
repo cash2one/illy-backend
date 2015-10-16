@@ -67,7 +67,6 @@ var sendMessage = co.wrap(function *(to, content) {
     });
 });
 
-
 module.exports = {
     sendMessage: sendMessage,
     getQrcode: getQrcode,

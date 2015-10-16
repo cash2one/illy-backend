@@ -10,8 +10,6 @@ var qn = require('../../qiniu');
 var models = require('../../models');
 var Student = models.Student;
 var Homework = models.Homework;
-var SchoolScoreRule = models.SchoolScoreRule;
-
 
 var homeworkApi = {
     /**

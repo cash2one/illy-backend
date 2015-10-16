@@ -9,10 +9,9 @@ var Activity = models.Activity;
 var ActivityCollect = models.ActivityCollect;
 
 var api = {
+
     /**
-     *
      * 读取活动信息
-     *
      */
     readActivity: function *() {
         this.body = yield Activity.findByIdAndUpdate(this.params.activityId, {$inc: {visitCount: 1}}, {'new': true}).exec();

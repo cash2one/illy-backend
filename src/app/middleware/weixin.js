@@ -21,7 +21,6 @@ var middleWare = {
         yield next;
     },
 
-
     /**
      * 获取微信 access token
      * @param next
@@ -34,6 +33,7 @@ var middleWare = {
         }
         yield next;
     },
+
 
     /**
      *  获取 jsapi_ticket

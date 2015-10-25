@@ -70,7 +70,7 @@ var userApi = {
             if (!user) {
                 user = yield User.findOne({openids: openid}, 'schoolId').exec();
             }
-            if (!user) {
+            if (!user && user !== null) {
                 this.throw(401, 'User not found : openid [ ' + openid + ' ]');
             }
             token = jwt.sign({openid: openid, _id: user._id, schoolId: user.schoolId}, config.jwt.secret);

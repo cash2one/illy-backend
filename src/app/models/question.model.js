@@ -26,9 +26,8 @@ var questionSchema = new Schema({
 
     state: {
         type: Number,
-        default: 0
+        default: 0  // 0: 未回答  1: 已回答
     },
-
     answer: {
         type: String
     },

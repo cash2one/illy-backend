@@ -23,6 +23,15 @@ module.exports = function (app) {
         yield next;
     });
 
+    app.use(function*(next) {
+        try {
+            yield next;
+        }
+        catch (err) {
+            this.status = err.status || 500;
+            this.res.end(err.message);
+        }
+    });
     //handle weixin event and msg
     app.use(weixinProxy());
 
@@ -37,10 +46,6 @@ module.exports = function (app) {
     if (config.debug) {
         app.use(logger.debug);
     }
-
-    app.on('error', function (err) {
-        console.error(err);
-    });
 
     // jwt token
     app.use(jwt(config.jwt).unless({path: [/^\/api\/v1\/public/]}));

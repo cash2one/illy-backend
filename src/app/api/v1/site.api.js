@@ -18,7 +18,10 @@ var siteApi = {
     listCategories: function *() {
         var jwtUser = this.state.jwtUser;
         var schoolId = jwtUser.schoolId;
-        this.body = yield Category.find({schoolId: schoolId, disabled: 0}, 'name').lean().exec();
+        this.body = yield Category.find({schoolId: schoolId, disabled: 0}, 'name')
+            .sort('order')
+            .lean()
+            .exec();
     },
 
     /**
@@ -29,7 +32,10 @@ var siteApi = {
         var schoolId = jwtUser.schoolId;
         var postsList = [];
         var ret = [];
-        var categories = yield Category.find({schoolId: schoolId, disabled: 0}, 'name').lean().exec();
+        var categories = yield Category.find({schoolId: schoolId, disabled: 0}, 'name')
+            .sort('order')
+            .lean()
+            .exec();
         for (var i = 0; i < categories.length; i++) {
             var category = categories[i];
             ret[i] = category;

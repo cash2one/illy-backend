@@ -23,7 +23,7 @@
     "kue": "^0.9.6",
     "lodash": "^3.10.1",
     "mathjs": "^1.7.0",
-    "mongoose": "^4.1.10",
+    "mongoose": "^4.2.7",
     "mongoose-validator": "^1.2.0",
     "qiniu": "^6.1.8",
     "redis": "2.1.0",

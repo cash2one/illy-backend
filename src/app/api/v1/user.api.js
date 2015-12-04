@@ -52,6 +52,7 @@ var userApi = {
     auth: function *() {
         var openid = this.request.openid;
         var type = this.request.query.authType;
+        var school = this.request.query.school;
         var cacheKey;
         if (type && type === 'visitor') {
             cacheKey = 'token:visitor:' + openid;
@@ -69,6 +70,10 @@ var userApi = {
             }
             if (!user) {
                 user = yield User.findOne({openids: openid}, 'schoolId').exec();
+            }
+            //用于订阅号微网站查看
+            if (!user && school && school !== '') {
+                user = {openid: '', _id: '', schoolId: school};
             }
             if (!user || user === null) {
                 this.throw(401, 'User not found : openid [ ' + openid + ' ]');

@@ -11,6 +11,7 @@ var models = require('../../models');
 var qn = require('../../qiniu');
 var Visitor = models.Visitor;
 var User = models.Student;
+var School = models.School;
 
 var userApi = {
     /**
@@ -52,7 +53,7 @@ var userApi = {
     auth: function *() {
         var openid = this.request.openid;
         var type = this.request.query.authType;
-        var school = this.request.query.school;
+        var schoolNum = this.request.query.school;
         var cacheKey;
         if (type && type === 'visitor') {
             cacheKey = 'token:visitor:' + openid;
@@ -72,8 +73,12 @@ var userApi = {
                 user = yield User.findOne({openids: openid}, 'schoolId').exec();
             }
             //用于订阅号微网站查看
-            if (!user && school && school !== '') {
-                user = {openid: '', _id: '', schoolId: school};
+            if (!user && schoolNum && schoolNum !== '') {
+                let school = yield School.findOne({username: schoolNum}).select('_id').lean().exec();
+                if (!school) {
+                    this.throw(400, 'School not exist : ', schoolNum);
+                }
+                user = {openid: '', _id: '', schoolId: school._id.toString()};
             }
             if (!user || user === null) {
                 this.throw(401, 'User not found : openid [ ' + openid + ' ]');

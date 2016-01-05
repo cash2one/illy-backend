@@ -11,6 +11,9 @@ var middleWare = {
      */
     getOpenidToken: function*(next) {
         let code = this.request.query.code || this.request.body.code;
+        if (!code) {
+            return yield next;
+        }
         try {
             let token = yield tokenService.getAuthToken(code);
             this.request.openid = token.openid;

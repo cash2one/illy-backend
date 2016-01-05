@@ -186,7 +186,7 @@ var homeworkApi = {
             yield fetches;
         } catch (err) {
             console.error(err);
-            this.throw(400, '语音题上传失败');
+            this.throw(400, '语音题上传失败!');
         }
         _.forEach(keys, key => new Job('convertToMp3', {key: key}).save());
 
@@ -213,11 +213,11 @@ var homeworkApi = {
             .lean()
             .exec();
         if (!homework || homework.state !== 0 || homework.performances.length === 0) {
-            this.throw(400, '作业不存在或者已经结束');
+            this.throw(400, '作业已经结束!');
         }
         var performance = homework.performances[0];
         if (performance.state !== 0) {
-            this.throw(400, '作业已经提交');
+            this.throw(400, '作业已经提交!');
         }
         var finishAward = homework.finishAward;
         var performanceAward = homework.performanceAward;

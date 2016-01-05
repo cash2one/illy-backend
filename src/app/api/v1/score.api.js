@@ -15,13 +15,9 @@ var scoreApi = {
     scoreMall: function *() {
         var jwtUser = this.state.jwtUser;
         var schoolId = jwtUser.schoolId;
-        var offset = this.request.query.offset || 0;
-        var limit = this.request.query.limit || 10;
         var products = yield ScoreExchange.find({
-            schoolId: schoolId
-        }, '-createdTime -schoolId')
-            .skip(offset)
-            .limit(limit)
+                schoolId: schoolId
+            }, '-createdTime -schoolId')
             .sort('score')
             .lean()
             .exec();

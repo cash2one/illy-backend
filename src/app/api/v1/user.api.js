@@ -40,6 +40,9 @@ var userApi = {
         let signInfo = {_id: user._id, schoolId: user.schoolId};
         if (openid) {
             signInfo.openid = openid;
+            if (_.isEmpty(user.openids)) {
+                user.openids = [];
+            }
             user.openids.addToSet(openid);
             yield user.save();
         }
@@ -62,7 +65,7 @@ var userApi = {
             if (!school) {
                 this.throw(400, 'School not exist : ', schoolNum);
             }
-            return this.body = jwt.sign({schoolId: school._id.toString()});
+            return this.body = jwt.sign({schoolId: school._id.toString()}, config.jwt.secret);
         }
 
         if (!openid) {

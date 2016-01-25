@@ -3,7 +3,7 @@
  * Created by Frank on 15/6/26.
  */
 'use strict';
-
+var _ = require('lodash');
 var jwt = require('jsonwebtoken');
 var config = require('../../../config/config');
 var models = require('../../models');

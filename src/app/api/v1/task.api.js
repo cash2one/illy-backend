@@ -8,7 +8,6 @@ var Task = models.Task;
 var TaskRecord = models.TaskRecord;
 var Post = models.Post;
 var Activity = models.Activity;
-var ActivityCollect = models.ActivityCollect;
 var Student = models.Student;
 
 

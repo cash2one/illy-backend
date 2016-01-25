@@ -2,8 +2,6 @@
  * Created by Frank on 15/6/23.
  */
 'use strict';
-var jwt = require('jsonwebtoken');
-var tokenService = require('../weixin/token');
 var User = require('../models').Student;
 
 var middleWare = {
@@ -13,7 +11,7 @@ var middleWare = {
      */
     getUserByToken: function*(next) {
         var jwtUser = this.state.jwtUser;
-        if (!jwtUser || !(jwtUser._id && jwtUser.openid)) {
+        if (!jwtUser || !(jwtUser._id)) {
             this.throw(401, 'Not Authorized');
         }
         var user = yield User.findById(jwtUser._id).exec();

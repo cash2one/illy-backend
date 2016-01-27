@@ -8,6 +8,6 @@ var _ = require('lodash');
 module.exports = _.extend(
     require('./scoreExchange.model'),
     require('./scoreExchangeInstruction'),
-    require('./scoreTrace.model')
+    require('./scoreLog.model')
 );
 

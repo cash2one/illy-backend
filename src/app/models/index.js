@@ -10,11 +10,13 @@ module.exports = _.extend(
     require('./media'),
     require('./score'),
     require('./site'),
-    require('./task'),
     require('./user'),
     require('./schedule.model'),
     require('./class.model'),
     require('./communicationRecord.model'),
     require('./counter.model'),
-    require('./question.model')
+    require('./question.model'),
+    require('./scoreTask.model'),
+    require('./taskRecord.model'),
+    require('./events')
 );

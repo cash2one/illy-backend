@@ -28,18 +28,6 @@ module.exports = function (api) {
      */
     api.get('/tasks', task.list);
 
-    /**
-     * @api {get} /api/v1/tasks/:taskId  获取任务详情
-     * @apiName ReadTask
-     * @apiGroup Task
-     * @apiVersion 0.0.1
-     * @apiPermission 认证用户
-     * @apiHeader {String} Authorization Json web token
-     *
-     *
-     */
-    api.get('/tasks/:taskId', task.read);
-
 
     /**
      * @api {put} /api/v1/tasks/:taskId/done 完成任务通知

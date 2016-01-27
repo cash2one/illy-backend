@@ -5,11 +5,13 @@
 'use strict';
 var _ = require('lodash');
 var math = require('mathjs');
+var mongoose = require('mongoose');
 var Job = require('../../tasks/job');
 var qn = require('../../qiniu');
-var models = require('../../models');
-var Student = models.Student;
-var Homework = models.Homework;
+var Student = mongoose.model('Student');
+var Homework = mongoose.model('Homework');
+var ScoreLog = mongoose.model('ScoreLog');
+
 
 var homeworkApi = {
     /**
@@ -49,15 +51,15 @@ var homeworkApi = {
         var offset = this.request.query.offset || 0;
         var limit = this.request.query.limit || 10;
         var homeworkList = yield Homework.find({
-            schoolId: schoolId,
-            performances: {
-                $elemMatch: {
-                    student: userId,
-                    state: {$in: [1, 2]},
-                    'wrongCollect.0': {$exists: true}
+                schoolId: schoolId,
+                performances: {
+                    $elemMatch: {
+                        student: userId,
+                        state: {$in: [1, 2]},
+                        'wrongCollect.0': {$exists: true}
+                    }
                 }
-            }
-        }, {performances: {$elemMatch: {student: userId}}})
+            }, {performances: {$elemMatch: {student: userId}}})
             .select('title')
             .skip(offset)
             .limit(limit)
@@ -114,14 +116,14 @@ var homeworkApi = {
         var offset = this.request.query.offset || 0;
         var limit = this.request.query.limit || 10;
         var homeworkList = yield Homework.find({
-            schoolId: schoolId,
-            performances: {
-                $elemMatch: {
-                    student: userId,
-                    state: {$in: [1, 2]}
+                schoolId: schoolId,
+                performances: {
+                    $elemMatch: {
+                        student: userId,
+                        state: {$in: [1, 2]}
+                    }
                 }
-            }
-        }, {performances: {$elemMatch: {student: userId}}})
+            }, {performances: {$elemMatch: {student: userId}}})
             .select('title createdTime creator')
             .skip(offset)
             .sort('-createdTime')
@@ -165,14 +167,11 @@ var homeworkApi = {
         let postData = this.request.body;
         let studentId = jwtUser._id;
         let numOfExercise = postData.numOfExercise;
-        //let wrongCount = postData.wrongCollect ? postData.wrongCollect.length : 0;
         let wrongCollect = [];
-        let wrongCount = 0;
         let suggestedAnswers = postData.suggestedAnswers;
         let localAnswers = postData.localAnswers;
         let spendSeconds = postData.spendSeconds;
         //let rightCount = numOfExercise - wrongCount;
-        let rightCount = 0;
         let fetches = [];
         let keys = [];
         _.forEach(postData.audioAnswers, audioAnswer=> {
@@ -196,18 +195,17 @@ var homeworkApi = {
         if (len_l === len_s) {
             for (var index = 0; index < len_l; index++) {
                 if (typeof localAnswers[index] == "string") {
-                    if (suggestedAnswers[index] !== localAnswers[index].trim()) { //这个地方待会要再改
+                    if (suggestedAnswers[index] !== localAnswers[index].trim()) {
+                        //这个地方待会要再改
                         //题目的索引从1开始的
                         wrongCollect.push({sequence: index + 1, answer: localAnswers[index]});
                     }
                 }
-
             }
         }
-        wrongCount = wrongCollect.length;
-        rightCount = numOfExercise - wrongCount;
-
-        var homework = yield Homework.findOne({_id: homeworkId},
+        let wrongCount = wrongCollect.length;
+        let rightCount = numOfExercise - wrongCount;
+        let homework = yield Homework.findOne({_id: homeworkId},
             {performances: {$elemMatch: {student: studentId}}})
             .select('state finishAward performanceAward')
             .lean()
@@ -215,22 +213,22 @@ var homeworkApi = {
         if (!homework || homework.state !== 0 || homework.performances.length === 0) {
             this.throw(400, '作业已经结束!');
         }
-        var performance = homework.performances[0];
+        let performance = homework.performances[0];
         if (performance.state !== 0) {
             this.throw(400, '作业已经提交!');
         }
-        var finishAward = homework.finishAward;
-        var performanceAward = homework.performanceAward;
-        var factor = rightCount / numOfExercise;
+        let finishAward = homework.finishAward;
+        let performanceAward = homework.performanceAward;
+        let factor = rightCount / numOfExercise;
         if (factor < 1) {
             performanceAward = math.floor(factor * performanceAward);
         }
-        var totalAward = finishAward + performanceAward;
+        let totalAward = finishAward + performanceAward;
         // 提交成绩
         yield Homework.update({_id: homeworkId, 'performances.student': studentId}, {
             $set: {
                 'performances.$': _.assign(postData, {
-                    wrongCollect:wrongCollect,
+                    wrongCollect: wrongCollect,
                     student: studentId,
                     award: totalAward,
                     spendSeconds: spendSeconds,
@@ -242,15 +240,21 @@ var homeworkApi = {
                 'statistics.studentCountOfFinished': 1
             }
         }).exec();
-
         // 奖励积分
-        var student = yield Student.findByIdAndUpdate(studentId, {
+        let student = yield Student.findByIdAndUpdate(studentId, {
             $inc: {
                 score: totalAward,
                 finishedHomeworkCount: 1
             }
         }, {'new': true}).exec();
-
+        let scoreLog = new ScoreLog({
+            student: student,
+            value: totalAward,
+            operation: 0,
+            remark: '作业奖励',
+            schoolId: jwtUser.schoolId
+        });
+        yield scoreLog.save();
         this.body = {
             totalAward: totalAward,
             rightCount: rightCount,

@@ -1,7 +1,8 @@
 /**
- * Created by Frank on 15/7/20.
- *
+ * Created by Frank on 16/1/26.
  */
+'use strict';
+
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var ObjectId = Schema.Types.ObjectId;
@@ -14,7 +15,7 @@ var taskCollectSchema = new Schema({
 
     task: {
         type: ObjectId,
-        ref: 'Task',
+        ref: 'ScoreTask',
         required: true
     },
 

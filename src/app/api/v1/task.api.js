@@ -63,7 +63,7 @@ var taskApi = {
         //记录积分日志
         yield scoreLog.save();
         //更新任务参与人数
-        yield Task.update({_id: taskId}, {$inc: {participants: 1}}).exec();
+        yield ScoreTask.update({_id: taskId}, {$inc: {participants: 1}}).exec();
         this.body = true;
     }
 };
